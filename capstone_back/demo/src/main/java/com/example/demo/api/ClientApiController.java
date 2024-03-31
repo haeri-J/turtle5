@@ -1,4 +1,4 @@
-package com.example.demo.controller;
+package com.example.demo.api;
 
 import com.example.demo.dto.ClientForm;
 import com.example.demo.entity.Client;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClientApiController {
 
     @Autowired
-    private ClientService clientService;
+    private ClientService clientService;// 서비스 객체 주입
 
     // 클라이언트 정보 입력 폼 대신 클라이언트 정보를 받아서 처리하는 API
     @PostMapping("/api/clients")//1.사용자가 이 주소에 들어가면 dto형태로 회원 정보(clientid등등..)가 들어옴(@RequestBody-> post 바디형태 데이터 전달)
