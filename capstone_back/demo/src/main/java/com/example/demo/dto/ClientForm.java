@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @AllArgsConstructor
 @ToString
-public class ClientForm {
+public class ClientForm {//dto
 
     private int clientId;
     private String name;
