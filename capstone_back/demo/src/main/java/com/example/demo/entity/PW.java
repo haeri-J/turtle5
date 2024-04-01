@@ -19,7 +19,7 @@ public class PW {
 
     @Id
     @GeneratedValue
-    private int passwordId;
+    private Long passwordId;
 
     @Column
     private String passwordHash;
