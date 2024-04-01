@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ClientForm {//dto
 
-    private int clientId;
+    private Long clientId;
     private String name;
     private String phoneNo;
     private String birth;
