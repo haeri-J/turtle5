@@ -31,10 +31,11 @@ public class Client {
     @Column
     private String gender;
 
+    @Column
+    private String email;
+
     @OneToOne//외래키 설정??
     @Column(name = "password_id")
     private PW passwordId;
-
-
 
 }
