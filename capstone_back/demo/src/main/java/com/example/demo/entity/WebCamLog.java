@@ -19,13 +19,13 @@ public class WebCamLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start_time ",nullable = false)
+    @Column(name = "start_time",nullable = false)
     private String startTime;
 
-    @Column(name = "end_time ",nullable = false)
+    @Column(name = "end_time",nullable = false)
     private String endTime;
 
-    @Column(name = "cam_useDate ",nullable = false)
+    @Column(name = "cam_useDate",nullable = false)
     private String camUseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
