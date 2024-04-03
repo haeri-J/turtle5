@@ -22,8 +22,8 @@ public class Client {
     @Column
     private String name;
 
-    @Column
-    private String phone_no;
+    @Column(name = "phone_no")
+    private String phoneNo;
 
     @Column
     private String birth;

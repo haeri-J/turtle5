@@ -21,6 +21,6 @@ public class ClientForm {//dto
 
     //dto를 entity로 변환하는 함수
     public Client toEntity(PW passwordEntity) {
-        return new Client(clientId, name,phoneNo, birth, gender, email,passwordEntity);
+        return new Client(clientId, name,phoneNo, birth, gender, email, passwordEntity);
     }
 }
