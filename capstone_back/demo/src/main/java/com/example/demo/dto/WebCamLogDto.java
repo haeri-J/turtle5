@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Client;
+import com.example.demo.entity.WebCamLog;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 
@@ -11,6 +13,9 @@ public class WebCamLogDto {
     private String startTime;
     private String endTime;
     private String cam_useDate;
-    private Long clientId;
+    private Client clientId;
 
+    public WebCamLog toEntity() {
+        return  new WebCamLog(camLogId, startTime, endTime, cam_useDate, clientId);
+    }
 }
