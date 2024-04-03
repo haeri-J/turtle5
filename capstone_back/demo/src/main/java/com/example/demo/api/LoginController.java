@@ -20,7 +20,7 @@ public class LoginController {
     }
 
     @PostMapping("/api/login")
-    public String login(@RequestBody LoginRequestDto requestDTO) {
-        return loginService.login(requestDTO);
+    public String login(@RequestBody LoginRequestDto loginRequestDto) {
+        return loginService.login(loginRequestDto);
     }
 }
