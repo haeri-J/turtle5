@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.dto.ClientForm;
+import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.PW;
 import com.example.demo.repository.ClientRepository;
@@ -54,5 +55,17 @@ public class ClientService {
     // 클라이언트 등록 전 isEmailUnique() 메소드를 이용하여 제공된 이메일 주소가 고유한지 확인
     public boolean isEmailUnique(String email) {
         return clientRepository.findByEmail(email) == null;
+    }
+
+    public String login(LoginRequestDto loginRequestDto) {
+        // Retrieve user by email from the database
+        Client client = clientRepository.findByEmail(loginRequestDto.getEmail());
+
+        // Check if the user exists and if the provided password matches
+        if (client != null && client.getPasswordId().equals(loginRequestDto.getPassword())) {
+            return "success";
+        } else {
+            return "failure";
+        }
     }
 }
