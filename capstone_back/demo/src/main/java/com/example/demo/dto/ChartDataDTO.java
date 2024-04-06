@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChartDataDTO {
-    private String label;
-    private Double value;
-
+    private double percentile; // 상위 퍼센티지
+    // 추후 변수 추가..
 }
