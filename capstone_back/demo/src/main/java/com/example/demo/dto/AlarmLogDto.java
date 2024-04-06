@@ -9,4 +9,5 @@ public class AlarmLogDto {
     private String clientId;
     private String alarmDate;
     private String time;
+    private String date;
 }
