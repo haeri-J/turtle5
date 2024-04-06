@@ -8,11 +8,18 @@ import com.example.demo.entity.PW;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.PasswordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.ArrayList;
+
 @Service
-public class ClientService {
+public class ClientService implements UserDetailsService  {
 
     @Autowired
     private ClientRepository clientRepository;
@@ -67,5 +74,14 @@ public class ClientService {
         } else {
             return "failure";
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Client client = clientRepository.findByEmail(email);
+        if (client == null) {
+            throw new UsernameNotFoundException(email);
+        }
+        return new org.springframework.security.core.userdetails.User(client.getEmail(), client.getPasswordId().getPasswordHash(), new ArrayList<>());
     }
 }
