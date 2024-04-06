@@ -17,7 +17,7 @@ public class ChartDataService {
     public ChartDataService(ChartDataRepository chartDataRepository) {
         this.chartDataRepository = chartDataRepository;
     }
-    
+
     public List<ChartDataDTO> findAllChartData() {
         List<ChartData> chartDataList = chartDataRepository.findAll();
         return chartDataList.stream().map(data -> {
