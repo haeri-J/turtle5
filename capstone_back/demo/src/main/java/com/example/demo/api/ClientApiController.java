@@ -1,6 +1,7 @@
 package com.example.demo.api;
 
 import com.example.demo.dto.ClientForm;
+import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.entity.Client;
 import com.example.demo.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +27,11 @@ public class ClientApiController {
         return (created != null) ?
                 ResponseEntity.status(HttpStatus.OK).body(created) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    //로그인 매핑
+    @PostMapping("/api/login")
+    public String login(@RequestBody LoginRequestDto loginRequestDto) {
+        return clientService.login(loginRequestDto);
     }
 
 }
