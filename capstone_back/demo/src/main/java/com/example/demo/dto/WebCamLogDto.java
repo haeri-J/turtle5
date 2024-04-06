@@ -20,6 +20,6 @@ public class WebCamLogDto {
 
 
     public WebCamLog toEntity(Client clientId) {
-        return  new WebCamLog(camLogId, startTime, endTime, cam_useDate, clientId);
+        return new WebCamLog(camLogId, startTime, endTime, cam_useDate, clientId);
     }
 }

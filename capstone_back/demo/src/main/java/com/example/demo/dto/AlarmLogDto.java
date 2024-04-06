@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class AlarmLogDto {
     private String clientId;
-    private String date;
+    private String alarmDate;
     private String time;
+    private String date;
 }
