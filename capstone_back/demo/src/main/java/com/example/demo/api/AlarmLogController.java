@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api") // 기본 URL 경로 설정
+@RequestMapping("/api/{clientId}")
 public class AlarmLogController {
     private final AlarmLogService alarmLogService;
 
