@@ -26,4 +26,5 @@ public class ChartDataService {
             return dto;
         }).collect(Collectors.toList());
     }
+
 }

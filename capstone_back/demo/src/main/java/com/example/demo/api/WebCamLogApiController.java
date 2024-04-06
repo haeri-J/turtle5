@@ -2,7 +2,6 @@ package com.example.demo.api;
 
 
 import com.example.demo.dto.WebCamLogDto;
-import com.example.demo.entity.Client;
 import com.example.demo.entity.WebCamLog;
 import com.example.demo.service.WebCamLogService;
 import lombok.extern.slf4j.Slf4j;
