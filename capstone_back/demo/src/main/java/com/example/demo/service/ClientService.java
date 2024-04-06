@@ -24,7 +24,7 @@ public class ClientService {
     // 클라이언트 정보를 저장하고 저장된 정보를 반환하는 메서드
     public Client saveClient(ClientForm dto) {
 
-        // 이메일이 시스템에 이미 존재하는 경우 -> RuntimeException 발생
+        // 이메일이 시스템에 이미 존재하는 경우
         if(!isEmailUnique(dto.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");        }
 
@@ -51,12 +51,14 @@ public class ClientService {
     public String login(LoginRequestDto loginRequestDto) {
         // Retrieve user by email from the database
         Client client = clientRepository.findByEmail(loginRequestDto.getEmail());
+        PW hashedPW = passwordRepository.findByPasswordId(client.getPasswordId());
 
         // Check if the user exists and if the provided password matches
-        if (client != null && client.getPasswordId().equals(loginRequestDto.getPassword())) {
+        if (client != null && bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), hashedPW.getPasswordHash())) {
             return "success";
         } else {
             return "failure";
         }
     }
 }
+
