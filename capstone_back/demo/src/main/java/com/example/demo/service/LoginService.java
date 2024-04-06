@@ -17,10 +17,12 @@ public class LoginService {
         Client client = clientRepository.findByEmail(loginRequestDto.getEmail());
 
         // Check if the user exists and if the provided password matches
-        if (client != null && client.getPasswordId().equals(loginRequestDto.getPassword())) {
-            return "success";
-        } else {
-            return "failure";
-        }
+        // Client에서 PW의 password를 참조하는 외래키로 값을 get하면 되는데 아직 외래키 설정 못함
+//        if (client != null && client.getPasswordId().equals(loginRequestDto.getPassword())) {
+//            return "success";
+//        } else {
+//            return "failure";
+//        }
+        return null;
     }
 }
