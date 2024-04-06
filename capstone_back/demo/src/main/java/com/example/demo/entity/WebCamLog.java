@@ -23,7 +23,7 @@ public class WebCamLog {
     @Column(name = "end_time",nullable = false)
     private String endTime;
 
-    @Column(name = "cam_useDate",nullable = false)
+    @Column(name = "cam_usedDate",nullable = false)
     private String camUseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
