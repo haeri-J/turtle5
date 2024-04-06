@@ -18,9 +18,13 @@ public class ChartDataService {
         this.chartDataRepository = chartDataRepository;
     }
 
-//    public List<ChartDataDTO> findChartDataByLabel(String label) {
-//        List<ChartData> chartDataList = chartDataRepository.findByLabelContaining(label);
-//        // Entity를 DTO로 변환하는 로직 필요
-//        return chartDataList.stream().map(data -> new ChartDataDTO(data.getLabel(), data.getValue())).collect(Collectors.toList());
-//    }
+    public List<ChartDataDTO> findAllChartData() {
+        List<ChartData> chartDataList = chartDataRepository.findAll();
+        return chartDataList.stream().map(data -> {
+            ChartDataDTO dto = new ChartDataDTO();
+            dto.setPercentile(data.getPercentile());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
 }
