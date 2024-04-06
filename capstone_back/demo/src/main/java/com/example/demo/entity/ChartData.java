@@ -9,7 +9,6 @@ public class ChartData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String label;
-    private Double value;
+    private double percentile; // 상위 퍼센티지
 
 }
