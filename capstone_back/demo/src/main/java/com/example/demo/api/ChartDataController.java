@@ -26,6 +26,6 @@ public class ChartDataController {
         List<ChartDataDto> chartDataDto = chartDataService.findAllChartData();
         return ResponseEntity.ok().body(chartDataDto);
 
-        // return ResponseEntity.ok().body(new ChartDataDto()); ???
+        // return ResponseEntity.ok().body(new ChartDataDto());
     }
 }

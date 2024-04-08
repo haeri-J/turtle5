@@ -23,4 +23,10 @@ public class ChartData {
     @Column(name = "alarm_freq", nullable = false)
     private int alarmFreq;
 
+    @Column(nullable = false)
+    private String date;
+
+    @Column(nullable = false)
+    private int alarm_freq;
+
 }
