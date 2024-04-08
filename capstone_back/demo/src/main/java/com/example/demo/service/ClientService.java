@@ -8,20 +8,34 @@ import com.example.demo.entity.PW;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.PasswordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.ArrayList;
+
 @Service
-public class ClientService {
+public class ClientService implements UserDetailsService  {
 
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
     private PasswordRepository passwordRepository; // 비밀번호 정보를 다루는 레포지토리
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     // 클라이언트 정보를 저장하고 저장된 정보를 반환하는 메서드
     public Client saveClient(ClientForm dto) {
+
+        // 이메일이 시스템에 이미 존재하는 경우
+        if(!isEmailUnique(dto.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");
+        }
+
         // 비밀번호 해싱
         String hashedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
 
@@ -31,41 +45,37 @@ public class ClientService {
         passwordRepository.save(passwordEntity);
 
         Client client = dto.toEntity(passwordEntity); //dto를 엔티티 형태로 변환
-        if (client.getClientId() != null) {//아직 회원가입이니깐 id에 널값이 들어가있어야함
+        if (client.getClientId() != null) { //아직 회원가입이니깐 id에 널값이 들어가 있어야함
             return null;
         }
-        //.save는 내장함수로 엔티티 형태로 디비에 넣어줌
+        //.save는 내장함수로 엔티티 형태로 디비에 넣어줌(이때 실제 id 할당)
         return clientRepository.save(client);
     }
-    // 새로운 클라이언트를 등록하는 함수
-    public Client registerClient(ClientForm clientDto) {
-        if(!isEmailUnique(clientDto.getEmail())) {
-            // 주소가 시스템에 이미 존재하는 경우 -> 적절한 오류 메시지와 함께 RuntimeException 발생
-            throw new RuntimeException("Email already exists");
-        }
-
-        // 이메일 주소가 고유한 경우 새로운 Client 객체를 생성 후 clientDto에서 이메일 주소를 설정
-        Client client = new Client();
-        client.setEmail(clientDto.getEmail());
-
-        // 클라이언트 정보를 DB에 유지하는 save() 메소드를 사용하여 새 클라이언트 엔터티 저장
-        return clientRepository.save(client);
-    }
-
     // 클라이언트 등록 전 isEmailUnique() 메소드를 이용하여 제공된 이메일 주소가 고유한지 확인
     public boolean isEmailUnique(String email) {
-        return clientRepository.findByEmail(email) == null;
+        return clientRepository.findByEmail(email) == null; // null이면 이메일 사용 가능
     }
 
     public String login(LoginRequestDto loginRequestDto) {
         // Retrieve user by email from the database
         Client client = clientRepository.findByEmail(loginRequestDto.getEmail());
+        PW hashedPW = passwordRepository.findByPasswordId(client.getPasswordId());
 
         // Check if the user exists and if the provided password matches
-        if (client != null && client.getPasswordId().equals(loginRequestDto.getPassword())) {
+        if (client != null && bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), hashedPW.getPasswordHash())) {
             return "success";
         } else {
             return "failure";
         }
     }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Client client = clientRepository.findByEmail(email);
+        if (client == null) {
+            throw new UsernameNotFoundException(email);
+        }
+        return new org.springframework.security.core.userdetails.User(client.getEmail(), client.getPasswordId().getPasswordHash(), new ArrayList<>());
+    }
 }
+
