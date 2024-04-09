@@ -1,5 +1,6 @@
 package com.example.demo.config;
 
+<<<<<<< Updated upstream
 //import com.example.demo.service.ClientService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -42,12 +43,24 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+=======
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+>>>>>>> Stashed changes
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+<<<<<<< Updated upstream
                 .csrf(csrf -> csrf.disable()) // CSRF 보호 기능 비활성화
                 .authorizeRequests(authorize -> authorize
                         .requestMatchers("/", "/home", "/api/signup", "/api/login").permitAll() // 홈, 회원가입, 로그인 페이지는 인증 없이 접근 허용
@@ -73,3 +86,28 @@ public class SecurityConfig {
     }
 }
 
+=======
+                .authorizeRequests(authorizeRequests ->
+                        authorizeRequests
+                                .antMatchers("/api/login").permitAll() // 루트 URL('/')은 모두에게 허용
+                                .anyRequest().authenticated() // 그 외 모든 요청은 인증을 요구
+                )
+                .formLogin(formLogin ->
+                        formLogin
+                                .loginPage("/login") // 커스텀 로그인 페이지 URL 설정
+                                .permitAll() // 로그인 페이지는 인증 없이 접근 허용
+                )
+                .logout(logout ->
+                        logout.permitAll() // 로그아웃 페이지는 인증 없이 접근 허용
+                );
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}
+
+
+>>>>>>> Stashed changes
