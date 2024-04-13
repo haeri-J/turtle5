@@ -1,6 +1,8 @@
 package com.example.demo.api;
 
+
 import com.example.demo.dto.ChartDataDto;
+import com.example.demo.entity.Client;
 import com.example.demo.service.ChartDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -10,27 +12,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
 public class ChartController {
 
     @Autowired
     private ChartDataService chartDataService;
 
-    @GetMapping("/chartInquiry")
-    public List<ChartDataDto> getChartData(Model model) {
+    @GetMapping("/inquiry/{clientId}")
+    public List<ChartDataDto> getChartData(@RequestParam Client clientId, Model model) {
 
-        //List<ChartDataDTO> chartdata = chartDataService.getchartData();
-        //model.addAttribute("chartData", chartdata);
+        List<ChartDataDto> chartdata = chartDataService.getChartData(clientId);
 
-    public ResponseEntity<?> getChartData(@PathVariable("clientId") Long clientId, // URL에서 clientId 값을 추출하여 메소드의 인자로 사용
-                                          @RequestParam("date") LocalDate date,
-                                          @RequestParam("alarmFreq") int alarmFreq) {
+        model.addAttribute("chartData", chartdata);
 
-        List<ChartDataDto> chartDataDto = chartDataService.findAllChartData();
-        return ResponseEntity.ok().body(chartDataDto);
-
-        // return ResponseEntity.ok().body(new ChartDataDto());
-    }
+       return null;
 
     }
 }

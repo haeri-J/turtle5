@@ -16,25 +16,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class SecurityLoginController {
 
     private final UserService userService;
 
-    @GetMapping(value = {"", "/"})
-    public String home(Model model, Authentication auth) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
-
-        if(auth != null) {
-            User loginUser = userService.getLoginUserByLoginId(auth.getName());
-            if (loginUser != null) {
-                model.addAttribute("nickname", loginUser.getNickname());
-            }
-        }
-
-        return "home";
-    }
+//    @GetMapping(value = {"", "/"})
+//    public String home(Model model, Authentication auth) {
+//        model.addAttribute("loginType", "security-login");
+//        model.addAttribute("pageName", "Security 로그인");
+//
+//        if(auth != null) {
+//            User loginUser = userService.getLoginUserByLoginId(auth.getName());
+//            if (loginUser != null) {
+//                model.addAttribute("nickname", loginUser.getNickname());
+//            }
+//        }
+//
+//        return "home";
+//    }
 
 //    @GetMapping("/join")
 //    public String joinPage(Model model) {
@@ -71,35 +70,43 @@ public class SecurityLoginController {
 //        return "redirect:/security-login";
 //    }
 
-    @GetMapping("/login2")
-    public String loginPage(Model model) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
+//    @GetMapping("/login2")
+//    public String loginPage(Model model) {
+//        model.addAttribute("loginRequest", new LoginRequest());
+//        return "login2";
+//    }
 
+
+
+    @PostMapping("/login2")
+    public String loginPage(Model model) {
         model.addAttribute("loginRequest", new LoginRequest());
         return "login2";
     }
 
     @GetMapping("/info")
+    //@PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public String userInfo(Model model, Authentication auth) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
 
         User loginUser = userService.getLoginUserByLoginId(auth.getName());
-
-        if(loginUser == null) {
-            return "redirect:/api/login2";
-        }
-
         model.addAttribute("user", loginUser);
+
         return "info";
     }
 
     @GetMapping("/admin")
-    public String adminPage( Model model) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
-
+    //@PreAuthorize("hasAuthority('ADMIN')")
+    public String adminPage() {
         return "admin";
+    }
+
+    @GetMapping("/authentication-fail")
+    public String authenticationFail() {
+        return "errorPage/authenticationFail";
+    }
+
+    @GetMapping("/authorization-fail")
+    public String authorizationFail() {
+        return "errorPage/authorizationFail";
     }
 }
