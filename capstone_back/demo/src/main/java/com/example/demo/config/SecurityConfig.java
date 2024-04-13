@@ -1,48 +1,17 @@
 package com.example.demo.config;
 
-//import com.example.demo.service.ClientService;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-//@EnableWebSecurity
-//public class SecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//    @Autowired
-//    private ClientService clientService;
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//            http.csrf().disable() // CSRF 보호 기능 비활성화
-//                .authorizeRequests()
-//                .antMatchers("/api/signup", "/api/login").permitAll() // 회원가입과 로그인 API는 인증 없이 접근 허용
-//                .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
-//                .and()
-//                .formLogin()
-//                .loginProcessingUrl("/api/login") // 로그인 처리 URL
-//                .usernameParameter("email")
-//                .passwordParameter("password")
-//                .defaultSuccessUrl("/") // 로그인 성공 시 리다이렉트 URL
-//                .permitAll();
-//    }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(clientService) // 사용자 세부 서비스 설정
-//                .passwordEncoder(new BCryptPasswordEncoder()); // 비밀번호 인코더 설정
-//    }
-//}
-//
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableWebSecurity
+@RequiredArgsConstructor
+@Configuration
 public class SecurityConfig {
 
     @Bean

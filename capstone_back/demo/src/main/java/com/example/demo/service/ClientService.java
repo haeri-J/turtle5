@@ -13,12 +13,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
 @Service
+@Transactional
 public class ClientService implements UserDetailsService  {
 
     @Autowired
@@ -62,7 +63,7 @@ public class ClientService implements UserDetailsService  {
         PW hashedPW = passwordRepository.findByPasswordId(client.getPasswordId());
 
         // Check if the user exists and if the provided password matches
-        if (client != null && bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), hashedPW.getPasswordHash())) {
+        if (bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), hashedPW.getPasswordHash())) {
             return "success";
         } else {
             return "failure";

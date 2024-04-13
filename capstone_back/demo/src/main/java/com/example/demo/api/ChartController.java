@@ -2,21 +2,27 @@ package com.example.demo.api;
 
 
 import com.example.demo.dto.ChartDataDTO;
+import com.example.demo.service.ChartDataService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 public class ChartController {
-    @GetMapping("/{clientId}/inquiry")
-    public ResponseEntity<?> getChartData(@PathVariable("clientId") Long clientId, // URL에서 clientId 값을 추출하여 메소드의 인자로 사용
-                                          @RequestParam("start_time") LocalDateTime startTime,
-                                          @RequestParam("end_time") LocalDateTime endTime,
-                                          @RequestParam("cam_usedDate") LocalDate camUsedDate) {
-        // 차트 데이터 조회 로직 구현
-        return ResponseEntity.ok().body(new ChartDataDTO());
+
+    @Autowired
+    private ChartDataService chartDataService;
+
+    @GetMapping("/inquiry")
+    public List<ChartDataDTO> getChartData(Model model) {
+
+        List<ChartDataDTO> chartdata = chartDataService.getchartData();
+
+        model.addAttribute("chartData", chartdata);
+
     }
 }
