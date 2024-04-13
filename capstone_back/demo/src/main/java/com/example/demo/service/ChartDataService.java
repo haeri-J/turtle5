@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ChartDataDto;
 import com.example.demo.entity.AlarmLog;
+import com.example.demo.entity.Client;
 import com.example.demo.entity.WebCamLog;
 import com.example.demo.repository.AlarmLogRepository;
 import com.example.demo.repository.WebCamLogRepository;
@@ -25,13 +26,13 @@ public class ChartDataService {
     AlarmLogRepository alarmLogRepository;
 
 
-    public List<ChartDataDto> getChartData(Long clientId) {
+    public List<ChartDataDto> getChartData(Client clientId) {
 
 //        Long clientId = getCurrentUserId(); // 현재 인증된 사용자의 userId를 얻는 메소드
 
         // 사용자별 WebCamLog와 AlarmLog를 조회합니다.
-        List<WebCamLog> webcamLogs = webCamLogRepository.findByUserId(clientId);
-        List<AlarmLog> alarmLogs = alarmLogRepository.findByUserId(clientId);
+        List<WebCamLog> webcamLogs = webCamLogRepository.findByClientId(clientId);
+        List<AlarmLog> alarmLogs = alarmLogRepository.findByClientId(clientId);
 
         // 요일별로 웹캠 실행 시간을 집계합니다.
         Map<DayOfWeek, Long> webcamDurationByDay = webcamLogs.stream()

@@ -17,7 +17,7 @@ public class ChartController {
     private ChartDataService chartDataService;
 
     @GetMapping("/inquiry/{clientId}")
-    public List<ChartDataDto> getChartData(@RequestParam Long clientId, Model model) {
+    public List<ChartDataDto> getChartData(@RequestParam Client clientId, Model model) {
 
         List<ChartDataDto> chartdata = chartDataService.getChartData(clientId);
 
