@@ -25,8 +25,8 @@ public class ChartDataService {
         List<ChartData> chartDataList = chartDataRepository.findAll();
         return chartDataList.stream().map(data -> {
             ChartDataDto dto = new ChartDataDto();
-            dto.setDate(data.getDate());
-            dto.setAlarmFreq(data.getAlarmFreq());
+            dto.setDate(String.valueOf(data.getDate()));
+            dto.setAlarm_freq(data.getAlarmFreq());
             return dto;
         }).collect(Collectors.toList());
     }
