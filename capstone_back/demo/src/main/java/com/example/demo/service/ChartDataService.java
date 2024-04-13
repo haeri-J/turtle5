@@ -61,7 +61,7 @@ public class ChartDataService {
 
     private Long getCurrentUserId() {
 
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPricinpal();
 //        Long userId;
 //
 //        if (principal instanceof CustomUserDetails) {
@@ -70,6 +70,7 @@ public class ChartDataService {
 //            throw new IllegalStateException("인증된 사용자 정보를 얻을 수 없습니다.");
 //        }
 
+        return null;
     }
 
 }
