@@ -17,12 +17,14 @@ public class ChartController {
     @Autowired
     private ChartDataService chartDataService;
 
-    @GetMapping("/inquiry")
-    public List<ChartDataDTO> getChartData(Model model) {
-
-        List<ChartDataDTO> chartdata = chartDataService.getchartData();
-
-        model.addAttribute("chartData", chartdata);
-
-    }
+//    @GetMapping("/inquiry")
+//    public List<ChartDataDTO> getChartData(Model model) {
+//
+//        //List<ChartDataDTO> chartdata = chartDataService.getchartData();
+//
+//        //model.addAttribute("chartData", chartdata);
+//
+//       return
+//
+//    }
 }
