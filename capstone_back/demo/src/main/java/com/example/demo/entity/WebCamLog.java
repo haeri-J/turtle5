@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.stream.DoubleStream;
 
 
@@ -20,13 +22,13 @@ public class WebCamLog {
     private Long id;
 
     @Column(name = "start_time",nullable = false)
-    private String startTime;
+    private LocalTime startTime;
 
     @Column(name = "end_time",nullable = false)
-    private String endTime;
+    private LocalTime endTime;
 
     @Column(name = "cam_usedDate",nullable = false)
-    private String camUseDate;
+    private LocalDate camUseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
     @JoinColumn(name = "client_id", nullable = false) // 외래키 컬럼 지정
