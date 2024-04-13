@@ -24,8 +24,8 @@ public class AlarmLogService {
 
         // Id, 날짜, 시간 설정
         alarmLog.setClientId((alarmLogDto.getClientId()));
-        alarmLog.setDate(LocalDate.parse(alarmLogDto.getDate()));
-        alarmLog.setTime(LocalTime.parse(alarmLogDto.getTime()));
+        alarmLog.setDate(alarmLogDto.getDate());
+        alarmLog.setTime(alarmLog.getTime());
 
         // 알람 로그 저장
         return alarmLogRepository.save(alarmLog);

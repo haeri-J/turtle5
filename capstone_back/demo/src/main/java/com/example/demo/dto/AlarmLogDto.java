@@ -1,13 +1,18 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Client;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 public class AlarmLogDto {
-    private String clientId;
-    private String alarmDate;
-    private String time;
-    private String date;
+    private Long id;
+    private LocalDateTime time;
+    private LocalDateTime date;
+    private Client clientId;
 }
