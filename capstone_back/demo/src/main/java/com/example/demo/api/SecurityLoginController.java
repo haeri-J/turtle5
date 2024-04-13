@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class SecurityLoginController {
 
     private final UserService userService;
