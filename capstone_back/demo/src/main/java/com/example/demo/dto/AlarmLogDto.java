@@ -1,13 +1,21 @@
 package com.example.demo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.example.demo.entity.Client;
+import lombok.*;
 
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 @Setter
+@Getter
+
 public class AlarmLogDto {
-    private String clientId;
+
+    private Long alarmLog_id;
     private String alarmDate;
-    private String time;
-    private String date;
+    private String alarm_ringTime;
+
+    public AlarmLogDto toEntity(Client clientId) {
+        return new AlarmLogDto(alarmLog_id, alarmDate, alarm_ringTime, clientId);
+    }
 }

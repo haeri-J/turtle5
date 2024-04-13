@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ChartDataDTO;
+import com.example.demo.dto.ChartDataDto;
 import com.example.demo.entity.AlarmLog;
 import com.example.demo.entity.WebCamLog;
 import com.example.demo.repository.AlarmLogRepository;
@@ -26,7 +27,7 @@ public class ChartDataService {
     @Autowired
     AlarmLogRepository alarmLogRepository;
 
-    public List<ChartDataDTO> getChartData() {
+    public List<ChartDataDto> getChartData() {
         // 모든 WebCamLog와 AlarmLog를 조회합니다.
         List<WebCamLog> webcamLogs = webCamLogRepository.findAll();
         List<AlarmLog> alarmLogs = alarmLogRepository.findAll();

@@ -13,16 +13,16 @@ import java.time.LocalTime;
 @Table(name="AlarmLog")
 @NoArgsConstructor
 public class AlarmLog {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long alarmLog_id;
 
     @Column(name = "alarm_ringTime", nullable = false)
-    private LocalTime time; // 알람이 발생한 시간
+    private LocalTime alarm_ringTime; // 알람이 발생한 시간
 
     @Column(name = "alarmDate", nullable = false)
-    private LocalDate date; // 알람이 발생한 날짜
-
+    private LocalDate alarmDate; // 알람이 발생한 날짜
 
     @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
     @JoinColumn(name = "client_id", nullable = false) // 외래키 컬럼 지정

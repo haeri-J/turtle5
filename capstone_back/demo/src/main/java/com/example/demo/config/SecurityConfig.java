@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 
 import com.example.demo.entity.UserRole;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
