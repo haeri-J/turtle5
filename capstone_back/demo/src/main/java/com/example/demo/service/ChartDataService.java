@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-
 import com.example.demo.dto.ChartDataDTO;
 import com.example.demo.entity.AlarmLog;
 import com.example.demo.entity.WebCamLog;
@@ -57,6 +56,7 @@ public class ChartDataService {
         }
 
         return chartData;
+
     }
 }
 
