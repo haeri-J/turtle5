@@ -1,5 +1,6 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Client;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,5 +13,5 @@ public class AlarmLogDto {
     private Long id;
     private LocalTime time;
     private LocalDate date;
-    private String clientId;
+    private Client clientId;
 }
