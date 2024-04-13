@@ -1,6 +1,8 @@
 package com.example.demo.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -9,7 +11,8 @@ import java.time.LocalDate;
 @Setter
 
 public class ChartDataDto { // 클라이언트에게 시간대별 사용량 및 관련 상세정보 전달
-    private LocalDate date; // 날짜
-    private int alarmFreq; // 알림 빈도수
 
+    private DayOfWeek dayOfWeek; // 요일
+    private long webcamDuration; // 웹캠 실행 시간(분 단위)
+    private long alarmCount; // 알람 발생 횟수
 }

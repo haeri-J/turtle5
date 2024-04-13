@@ -37,9 +37,9 @@ public class AlarmLogService {
         }
 
         // Id, 날짜, 시간 설정
-        alarmLog.setAlarmLog_id((alarmLogDto.getAlarmLog_id()));
-        alarmLog.setAlarmDate(alarmLogDto.getAlarmDate());
-        alarmLog.setAlarm_ringTime(alarmLogDto.getAlarm_ringTime());
+        alarmLog.setClientId((alarmLogDto.getClientId()));
+        alarmLog.setDate(alarmLogDto.getDate());
+        alarmLog.setTime(alarmLog.getTime());
 
         // 알람 로그를 엔티티에 저장
         return AlarmLogRepository.save(alarmLog);

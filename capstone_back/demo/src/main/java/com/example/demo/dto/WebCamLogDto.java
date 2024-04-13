@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
@@ -14,9 +18,9 @@ import lombok.ToString;
 public class WebCamLogDto {
 
     private Long camLogId;
-    private String startTime;
-    private String endTime;
-    private String cam_useDate;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private LocalDateTime cam_useDate;
 
 
     public WebCamLog toEntity(Client clientId) {

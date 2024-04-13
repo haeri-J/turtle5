@@ -10,12 +10,8 @@ import lombok.*;
 @Getter
 
 public class AlarmLogDto {
-
-    private Long alarmLog_id;
-    private String alarmDate;
-    private String alarm_ringTime;
-
-    public AlarmLogDto toEntity(Client clientId) {
-        return new AlarmLogDto(alarmLog_id, alarmDate, alarm_ringTime, clientId);
-    }
+    private Long id;
+    private LocalDateTime time;
+    private LocalDateTime date;
+    private Client clientId;
 }
