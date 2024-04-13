@@ -1,18 +1,19 @@
 package com.example.demo.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Data
 @Table(name="AlarmLog")
 @NoArgsConstructor
+@AllArgsConstructor
+
 public class AlarmLog {
 
     @Id

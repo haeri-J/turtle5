@@ -28,9 +28,9 @@ public class AlarmLogService {
 
     // 알람 로그 저장 메소드
     public AlarmLog saveAlarmLog(Long clientId, AlarmLogDto alarmLogDto) {
-        Client target = clientRepository.findById(clientId).orElse(null);
+        Client target = AlarmLogRepository.findByUserId(clientId).orElse(null);
 
-        AlarmLogDto alarmLog = alarmLogDto.toEntity(target);
+        AlarmLog alarmLog = alarmLogDto.toEntity(target);
 
         if (alarmLog.getAlarmLog_id() != null) {
             return null;
