@@ -2,6 +2,11 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Collection;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,4 +41,7 @@ public class Client {
     @JoinColumn(name = "password_id", referencedColumnName = "password_id")
     private PW passwordId;
 
+
+
 }
+

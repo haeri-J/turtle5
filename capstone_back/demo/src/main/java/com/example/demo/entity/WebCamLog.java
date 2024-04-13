@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.stream.DoubleStream;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +31,9 @@ public class WebCamLog {
     @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
     @JoinColumn(name = "client_id", nullable = false) // 외래키 컬럼 지정
     private Client clientId;
- //   @AllArgsConstructor이 해주는 일은 아래와 같은 일
+
+
+    //   @AllArgsConstructor이 해주는 일은 아래와 같은 일
 //    public WebCamLog(Long camLogId, String startTime, String endTime, String camUseDate, Client clientId) {
 //        this.id = camLogId;
 //        this.startTime = startTime;

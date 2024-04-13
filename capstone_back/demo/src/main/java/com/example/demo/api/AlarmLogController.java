@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/{clientId}")
+@RequestMapping("/api")
 public class AlarmLogController {
     private final AlarmLogService alarmLogService;
 

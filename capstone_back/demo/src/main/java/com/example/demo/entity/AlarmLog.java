@@ -10,18 +10,22 @@ import java.time.LocalTime;
 
 @Entity
 @Data
+@Table(name="AlarmLog")
 @NoArgsConstructor
 public class AlarmLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String clientId;
+    @Column(name = "alarm_ringTime", nullable = false)
+    private LocalTime time; // 알람이 발생한 시간
 
-    @Column(nullable = false)
+    @Column(name = "alarmDate", nullable = false)
     private LocalDate date; // 알람이 발생한 날짜
 
-    @Column(nullable = false)
-    private LocalTime time; // 알람이 발생한 시간
+
+    @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
+    @JoinColumn(name = "client_id", nullable = false) // 외래키 컬럼 지정
+    private Client clientId;
+
 }
