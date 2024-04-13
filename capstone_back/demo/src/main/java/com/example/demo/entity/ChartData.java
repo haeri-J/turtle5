@@ -24,9 +24,6 @@ public class ChartData {
     private int alarmFreq;
 
     @Column(nullable = false)
-    private String date;
-
-    @Column(nullable = false)
     private int alarm_freq;
 
 }
