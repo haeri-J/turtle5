@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,10 +29,9 @@ public class ChartDataService {
 
      // Long clientId = getCurrentUserId(); // 현재 인증된 사용자의 userId를 얻는 메소드
 
-        // 사용자별 WebCamLog와 AlarmLog를 조회합니다.
-        List<WebCamLog> webcamLogs = webCamLogRepository.findByClientId(clientId);
-        List<AlarmLog> alarmLogs = alarmLogRepository.findByClientId(clientId);
-
+        // 사용자별 WebCamLog와 AlarmLog를 조회합니다.//비어있으면 널값 반환
+        List<WebCamLog> webcamLogs = Optional.ofNullable(webCamLogRepository.findByClientId(clientId)).orElse(Collections.emptyList());
+        List<AlarmLog> alarmLogs = Optional.ofNullable(alarmLogRepository.findByClientId(clientId)).orElse(Collections.emptyList());
         // 요일별로 웹캠 실행 시간을 집계합니다.
         Map<DayOfWeek, Long> webcamDurationByDay = webcamLogs.stream()
                 .collect(Collectors.groupingBy(
