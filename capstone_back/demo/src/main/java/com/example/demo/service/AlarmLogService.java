@@ -18,8 +18,11 @@ public class AlarmLogService {
         this.alarmLogRepository = alarmLogRepository;
     }
 
+
     // 알람 로그 저장 메소드
     public AlarmLog saveAlarmLog(AlarmLogDto alarmLogDto) {
+
+
         AlarmLog alarmLog = new AlarmLog();
 
         // Id, 날짜, 시간 설정

@@ -14,5 +14,4 @@ public class AlarmLogDto {
     private Long id;
     private LocalDateTime time;
     private LocalDateTime date;
-    private Client clientId;
 }

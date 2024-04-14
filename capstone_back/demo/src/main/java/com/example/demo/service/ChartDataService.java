@@ -7,6 +7,7 @@ import com.example.demo.entity.WebCamLog;
 import com.example.demo.repository.AlarmLogRepository;
 import com.example.demo.repository.WebCamLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -26,9 +27,9 @@ public class ChartDataService {
     AlarmLogRepository alarmLogRepository;
 
 
-    public List<ChartDataDto> getChartData(Client clientId) {
+    public List<ChartDataDto> getChartData(Long clientId) {
 
-//        Long clientId = getCurrentUserId(); // 현재 인증된 사용자의 userId를 얻는 메소드
+     // Long clientId = getCurrentUserId(); // 현재 인증된 사용자의 userId를 얻는 메소드
 
         // 사용자별 WebCamLog와 AlarmLog를 조회합니다.
         List<WebCamLog> webcamLogs = webCamLogRepository.findByClientId(clientId);
@@ -62,15 +63,16 @@ public class ChartDataService {
     private Long getCurrentUserId() {
 
 //        Object principal = SecurityContextHolder.getContext().getAuthentication().getPricinpal();
-//        Long userId;
+//        Long ClientId;
 //
 //        if (principal instanceof CustomUserDetails) {
-//            userId = ((CustomUserDetails)principal).getUserId(); // CustomUserDetails는 userId를 포함하도록 확장한 클래스
+//            ClientId = ((CustomUserDetails)principal).getUserId(); // CustomUserDetails는 userId를 포함하도록 확장한 클래스
 //        } else {
 //            throw new IllegalStateException("인증된 사용자 정보를 얻을 수 없습니다.");
 //        }
-
-        return null;
+//
+//        return ClientId;
+        return  null;
     }
 
 }

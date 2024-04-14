@@ -16,8 +16,8 @@ public class ChartController {
     @Autowired
     private ChartDataService chartDataService;
 
-    @GetMapping("/inquiry/{clientId}")
-    public List<ChartDataDto> getChartData(@RequestParam Client clientId, Model model) {
+    @GetMapping("/inquiry/{clientId}")//시큐리티 적용시 수정 필수!
+    public List<ChartDataDto> getChartData(@RequestParam Long clientId, Model model) {
 
         List<ChartDataDto> chartdata = chartDataService.getChartData(clientId);
 

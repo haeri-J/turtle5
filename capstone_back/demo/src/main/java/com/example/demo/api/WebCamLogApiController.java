@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j//log.info를 쓰기 위한 어노테이션
 @RestController//컨트롤러라고 명명하는 어노테이션
-@RequestMapping("/{clientId}/webcam")
+@RequestMapping("/{clientId}/webcam")//시큐리티 적용시 수정 필수
 public class WebCamLogApiController {
 
     @Autowired

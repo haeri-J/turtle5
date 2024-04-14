@@ -21,8 +21,9 @@ public class AlarmLogController {
     }
 
     // 알람 로그를 저장하는 POST 요청 처리
-    @PostMapping("/alarmlog")
+    @PostMapping("/webcam/alarmlog")//프론트에 맞게 수정 필수
     public ResponseEntity<?> saveAlarmLog(@RequestBody AlarmLogDto alarmLogDto) {
+
         AlarmLog alarmLog = alarmLogService.saveAlarmLog(alarmLogDto);
 
         // 저장 성공 시 "success" 메시지와 응답 반환
