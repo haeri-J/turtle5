@@ -5,6 +5,7 @@ import com.example.demo.entity.AlarmLog;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.WebCamLog;
 import com.example.demo.repository.AlarmLogRepository;
+import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.WebCamLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,14 +25,19 @@ public class ChartDataService {
     @Autowired
     AlarmLogRepository alarmLogRepository;
 
+    @Autowired
+    ClientRepository clientRepository;
+
 
     public List<ChartDataDto> getChartData(Long clientId) {
 
-     // Long clientId = getCurrentUserId(); // 현재 인증된 사용자의 userId를 얻는 메소드
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
+
 
         // 사용자별 WebCamLog와 AlarmLog를 조회합니다.//비어있으면 널값 반환
-        List<WebCamLog> webcamLogs = Optional.ofNullable(webCamLogRepository.findByClientId(clientId)).orElse(Collections.emptyList());
-        List<AlarmLog> alarmLogs = Optional.ofNullable(alarmLogRepository.findByClientId(clientId)).orElse(Collections.emptyList());
+        List<WebCamLog> webcamLogs = Optional.ofNullable(webCamLogRepository.findByClientId(client)).orElse(Collections.emptyList());
+        List<AlarmLog> alarmLogs = Optional.ofNullable(alarmLogRepository.findByClientId(client)).orElse(Collections.emptyList());
         // 요일별로 웹캠 실행 시간을 집계합니다.
         Map<DayOfWeek, Long> webcamDurationByDay = webcamLogs.stream()
                 .collect(Collectors.groupingBy(
