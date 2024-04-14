@@ -8,7 +8,6 @@ import com.example.demo.repository.AlarmLogRepository;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.WebCamLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -63,20 +62,6 @@ public class ChartDataService {
         return chartData;
     }
 
-    private Long getCurrentUserId() {
-
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPricinpal();
-//        Long ClientId;
-//
-//        if (principal instanceof CustomUserDetails) {
-//            ClientId = ((CustomUserDetails)principal).getUserId(); // CustomUserDetails는 userId를 포함하도록 확장한 클래스
-//        } else {
-//            throw new IllegalStateException("인증된 사용자 정보를 얻을 수 없습니다.");
-//        }
-//
-//        return ClientId;
-        return  null;
-    }
 
 }
 
