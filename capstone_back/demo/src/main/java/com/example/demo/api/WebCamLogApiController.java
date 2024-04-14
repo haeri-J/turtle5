@@ -3,6 +3,7 @@ package com.example.demo.api;
 
 import com.example.demo.dto.WebCamLogDto;
 import com.example.demo.entity.WebCamLog;
+import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.WebCamLogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,16 @@ public class WebCamLogApiController {
     @Autowired
     private WebCamLogService webcamLogService;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
+
     @PostMapping("/log")
-    public ResponseEntity<WebCamLog> recodeLog(@PathVariable Long clientId , @RequestBody WebCamLogDto webcamlog){
-        WebCamLog created = webcamLogService.saveLog(clientId, webcamlog);
+    public ResponseEntity<WebCamLog> recodeLog(@RequestBody WebCamLogDto webcamlog){
+
+        Long clientId = authenticationService.getCurrentUserId();
+
+        WebCamLog created = webcamLogService.saveLog(clientId,webcamlog);
 
         return (created != null)?
                 ResponseEntity.status(HttpStatus.OK).body(created) :
