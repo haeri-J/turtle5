@@ -12,8 +12,8 @@ import lombok.Setter;
 public class PosturePercentageDto {
 
     private Long clientId;
-    private double posturePercentage;
-    private double rankPercentage;
+    private double posturePercentage;//현재 사용자의 자세비율 퍼센티지
+    private double rankPercentage;//상위 랭크 퍼센티지
 
 
 }
