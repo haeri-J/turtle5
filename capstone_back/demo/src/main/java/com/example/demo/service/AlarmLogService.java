@@ -2,7 +2,10 @@ package com.example.demo.service;
 
 import com.example.demo.dto.AlarmLogDto;
 import com.example.demo.entity.AlarmLog;
+import com.example.demo.entity.Client;
+import com.example.demo.entity.WebCamLog;
 import com.example.demo.repository.AlarmLogRepository;
+import com.example.demo.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,23 +14,23 @@ import java.time.LocalTime;
 
 @Service
 public class AlarmLogService {
-    private final AlarmLogRepository alarmLogRepository;
 
     @Autowired
-    public AlarmLogService(AlarmLogRepository alarmLogRepository) {
-        this.alarmLogRepository = alarmLogRepository;
-    }
+    AlarmLogRepository alarmLogRepository;
+
+    @Autowired
+    ClientRepository clientRepository;
+
 
     // 알람 로그 저장 메소드
-    public AlarmLog saveAlarmLog(AlarmLogDto alarmLogDto) {
-        AlarmLog alarmLog = new AlarmLog();
+    public AlarmLog saveAlarmLog(Long clientId, AlarmLogDto alarmLogDto) {
 
-        // Id, 날짜, 시간 설정
-        alarmLog.setClientId((alarmLogDto.getClientId()));
-        alarmLog.setDate(alarmLogDto.getDate());
-        alarmLog.setTime(alarmLog.getTime());
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
+
+        AlarmLog alarmLog = alarmLogDto.toEntity(client);
 
         // 알람 로그 저장
-        return alarmLogRepository.save(alarmLog);
+        return alarmLog.getId() != null ? null : (AlarmLog)this.alarmLogRepository.save(alarmLog);
     }
 }
