@@ -17,31 +17,21 @@ import java.time.LocalTime;
 public class AlarmLogService {
 
     @Autowired
-    private ClientRepository clientRepository;
-    @Autowired
-    private final AlarmLogRepository alarmLogRepository;
+    AlarmLogRepository alarmLogRepository;
 
     @Autowired
-    public AlarmLogService(AlarmLogRepository alarmLogRepository) {
-        this.alarmLogRepository = alarmLogRepository;
-    }
+    ClientRepository clientRepository;
+
 
     // 알람 로그 저장 메소드
     public AlarmLog saveAlarmLog(Long clientId, AlarmLogDto alarmLogDto) {
-        Client target = AlarmLogRepository.findByUserId(clientId).orElse(null);
 
-        AlarmLog alarmLog = alarmLogDto.toEntity(target);
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
 
-        if (alarmLog.getAlarmLog_id() != null) {
-            return null;
-        }
+        AlarmLog alarmLog = alarmLogDto.toEntity(client);
 
-        // Id, 날짜, 시간 설정
-        alarmLog.setClientId((alarmLogDto.getClientId()));
-        alarmLog.setDate(alarmLogDto.getDate());
-        alarmLog.setTime(alarmLog.getTime());
-
-        // 알람 로그를 엔티티에 저장
-        return AlarmLogRepository.save(alarmLog);
+        // 알람 로그 저장
+        return alarmLog.getId() != null ? null : (AlarmLog)this.alarmLogRepository.save(alarmLog);
     }
 }

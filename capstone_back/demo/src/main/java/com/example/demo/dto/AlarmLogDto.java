@@ -18,9 +18,8 @@ public class AlarmLogDto {
     private Long id;
     private LocalDateTime time;
     private LocalDateTime date;
-    private Client clientId;
 
-    public AlarmLog toEntity(Client clientId) {
-        return new AlarmLog(id, time, date, clientId);
+    public AlarmLog toEntity(Client client) {
+        return new AlarmLog(id, time, date, client);
     }
 }
