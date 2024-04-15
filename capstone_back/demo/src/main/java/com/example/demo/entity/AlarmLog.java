@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
+@Getter
 @Data
 @Table(name="AlarmLog")
 @NoArgsConstructor
