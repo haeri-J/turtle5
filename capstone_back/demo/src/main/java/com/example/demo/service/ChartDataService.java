@@ -66,6 +66,30 @@ public class ChartDataService {
     }
 
     //기능 2.
+
+    //사용자의 자세를 올바르게 유지한 시간을 더함.
+    private long calculateCorrectPostureDuration(List<AlarmLog> alarmLogs) {
+        // 알람 로그를 알람 시간에 따라 오름차순으로 정렬
+        alarmLogs.sort(Comparator.comparing(AlarmLog::getTime));
+
+        long correctPostureDuration = 0;
+        AlarmLog previousLog = null;
+
+        for (AlarmLog currentLog : alarmLogs) {
+            // 첫 번째 로그가 아니라면
+            if (previousLog != null) {
+                // 이전 알람과 현재 알람 사이의 시간 간격을 계산
+                long durationBetweenAlarms = Duration.between(previousLog.getTime().toLocalTime(), currentLog.getTime().toLocalTime()).toMinutes();
+                // 자세를 올바르게 유지한 시간에 더함
+                correctPostureDuration += durationBetweenAlarms;
+            }
+            // 현재 로그를 이전 로그로 설정
+            previousLog = currentLog;
+        }
+
+        return correctPostureDuration;
+    }
+
     // 사용자의 clientId를 인자로 받아서 웹캠 총 실행 시간을 계산하고, 자세를 올바르게 유지한 시간을 계산(메소드 분리)하여 퍼센티지를 구함.
     public double calculateCorrectPosturePercentage(Long clientId) {
         LocalDate today = LocalDate.now();
@@ -91,29 +115,6 @@ public class ChartDataService {
 
         // 상위 퍼센트 계산을 위한 로직 추가 필요
         return (double) correctPostureDuration / totalWebCamDuration * 100;
-    }
-
-    //사용자의 자세를 올바르게 유지한 시간을 더함.
-    private long calculateCorrectPostureDuration(List<AlarmLog> alarmLogs) {
-        // 알람 로그를 알람 시간에 따라 오름차순으로 정렬
-        alarmLogs.sort(Comparator.comparing(AlarmLog::getTime));
-
-        long correctPostureDuration = 0;
-        AlarmLog previousLog = null;
-
-        for (AlarmLog currentLog : alarmLogs) {
-            // 첫 번째 로그가 아니라면
-            if (previousLog != null) {
-                // 이전 알람과 현재 알람 사이의 시간 간격을 계산
-                long durationBetweenAlarms = Duration.between(previousLog.getTime().toLocalTime(), currentLog.getTime().toLocalTime()).toMinutes();
-                // 자세를 올바르게 유지한 시간에 더함
-                correctPostureDuration += durationBetweenAlarms;
-            }
-            // 현재 로그를 이전 로그로 설정
-            previousLog = currentLog;
-        }
-
-        return correctPostureDuration;
     }
 
     // 모든 사용자의 clientId 목록을 가져오는 메서드

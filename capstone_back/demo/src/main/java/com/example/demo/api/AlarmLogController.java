@@ -6,6 +6,7 @@ import com.example.demo.entity.AlarmLog;
 import com.example.demo.service.AlarmLogService;
 import com.example.demo.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,6 @@ public class AlarmLogController {
         AlarmLog alarmLog = alarmLogService.saveAlarmLog(clientId, alarmLogDto);
 
         // 저장 성공 시 "success" 메시지와 응답 반환
-        return ResponseEntity.ok().body("success");
+        return  ResponseEntity.status(HttpStatus.OK).body(alarmLog);
     }
 }
