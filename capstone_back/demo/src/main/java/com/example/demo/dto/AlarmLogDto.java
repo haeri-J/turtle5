@@ -13,10 +13,9 @@ import java.time.LocalTime;
 @Setter
 public class AlarmLogDto {
     private Long id;
-    private LocalDateTime time;
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
 
     public AlarmLog toEntity(Client client) {
-        return new AlarmLog(id, time, date, client);
+        return new AlarmLog(id, dateTime, client);
     }
 }

@@ -11,5 +11,5 @@ import java.util.List;
 public interface WebCamLogRepository extends JpaRepository<WebCamLog, Long> {
     List<WebCamLog> findByClientId(Client clientId);
 
-    List<WebCamLog> findByClientIdAndCamUseDate(Client clientId, LocalDateTime camUseDate);
+    List<WebCamLog> findByClientIdAndStartTime(Client clientId, LocalDateTime camUseDate);
 }
