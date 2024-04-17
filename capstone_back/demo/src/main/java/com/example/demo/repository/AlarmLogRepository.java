@@ -12,5 +12,5 @@ public interface AlarmLogRepository extends JpaRepository<AlarmLog, Long> {
 
     List<AlarmLog> findByClientId(Client clientId);
 
-    List<AlarmLog> findByClientIdAndDate(Client clientId, LocalDateTime date);
+    List<AlarmLog> findByClientIdAndDateTime(Client clientId, LocalDateTime date);
 }

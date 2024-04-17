@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,15 +43,18 @@ public class ChartDataService {
         List<AlarmLog> alarmLogs = Optional.ofNullable(alarmLogRepository.findByClientId(client)).orElse(Collections.emptyList());
         // 요일별로 웹캠 실행 시간을 집계합니다.
         Map<DayOfWeek, Long> webcamDurationByDay = webcamLogs.stream()
+                //webcamLogs 리스트를 스트림으로 변환한 후, Collectors.groupingBy()를 사용하여 요일별로 로그를 그룹화합니다.
                 .collect(Collectors.groupingBy(
+                        //log.getStartTime().getDayOfWeek()를 통해 각 로그의 시작 시간으로부터 요일을 추출(getDayOfWeek())합니다
                         log -> log.getStartTime().getDayOfWeek(),
+                        //Collectors.summingLong()을 사용하여 같은 요일에 속하는 로그들의 실행 시간(시작 시간과 종료 시간의 차이)을 분 단위(ChronoUnit.MINUTES.between)로 합산합니다.
                         Collectors.summingLong(log -> ChronoUnit.MINUTES.between(log.getStartTime(), log.getEndTime()))
                 ));
 
         // 요일별로 알람 발생 횟수를 집계합니다.
         Map<DayOfWeek, Long> alarmCountByDay = alarmLogs.stream()
                 .collect(Collectors.groupingBy(
-                        log -> log.getTime().getDayOfWeek(), // getTime()이 LocalDateTime을 반환한다고 가정합니다.
+                        log -> log.getDateTime().getDayOfWeek(), // getTime()이 LocalDateTime을 반환한다고 가정합니다.
                         Collectors.counting()
                 ));
 
@@ -70,7 +74,7 @@ public class ChartDataService {
     //사용자의 자세를 올바르게 유지한 시간을 더함.
     private long calculateCorrectPostureDuration(List<AlarmLog> alarmLogs) {
         // 알람 로그를 알람 시간에 따라 오름차순으로 정렬
-        alarmLogs.sort(Comparator.comparing(AlarmLog::getTime));
+        alarmLogs.sort(Comparator.comparing(AlarmLog::getDateTime));
 
         long correctPostureDuration = 0;
         AlarmLog previousLog = null;
@@ -79,7 +83,7 @@ public class ChartDataService {
             // 첫 번째 로그가 아니라면
             if (previousLog != null) {
                 // 이전 알람과 현재 알람 사이의 시간 간격을 계산
-                long durationBetweenAlarms = Duration.between(previousLog.getTime().toLocalTime(), currentLog.getTime().toLocalTime()).toMinutes();
+                long durationBetweenAlarms = Duration.between(previousLog.getDateTime().toLocalTime(), currentLog.getDateTime().toLocalTime()).toMinutes();
                 // 자세를 올바르게 유지한 시간에 더함
                 correctPostureDuration += durationBetweenAlarms;
             }
@@ -92,16 +96,16 @@ public class ChartDataService {
 
     // 사용자의 clientId를 인자로 받아서 웹캠 총 실행 시간을 계산하고, 자세를 올바르게 유지한 시간을 계산(메소드 분리)하여 퍼센티지를 구함.
     public double calculateCorrectPosturePercentage(Long clientId) {
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
 
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
 
         // 오늘 날짜의 WebCamLog 조회
-        List<WebCamLog> todaysWebCamLogs = webCamLogRepository.findByClientIdAndCamUseDate(client, today.atStartOfDay());
+        List<WebCamLog> todaysWebCamLogs = webCamLogRepository.findByClientIdAndStartTime(client, today);
 
         // 오늘 날짜의 AlarmLog 조회
-        List<AlarmLog> todaysAlarmLogs = alarmLogRepository.findByClientIdAndDate(client, today.atStartOfDay());
+        List<AlarmLog> todaysAlarmLogs = alarmLogRepository.findByClientIdAndDateTime(client, today);
 
         // 웹캠의 총 실행 시간 계산
         long totalWebCamDuration = todaysWebCamLogs.stream()

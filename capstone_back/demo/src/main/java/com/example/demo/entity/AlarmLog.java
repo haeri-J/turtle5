@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @Entity
 @Getter
 @Data
-@Table(name="AlarmLog")
+@Table(name="alarmLog")
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlarmLog {
@@ -23,10 +23,7 @@ public class AlarmLog {
     private Long id;
 
     @Column(name = "alarm_ringTime", nullable = false)
-    private LocalDateTime time; // 알람이 발생한 시간
-
-    @Column(name = "alarmDate", nullable = false)
-    private LocalDateTime date; // 알람이 발생한 날짜
+    private LocalDateTime dateTime; // 알람이 발생한 시간과 날짜
 
 
     @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
