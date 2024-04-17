@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AlarmLogDto;
+import com.example.demo.dto.WebCamLogDto;
 import com.example.demo.entity.AlarmLog;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.WebCamLog;

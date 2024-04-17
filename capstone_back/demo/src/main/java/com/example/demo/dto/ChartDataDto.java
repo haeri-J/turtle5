@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+
 public class ChartDataDto { // 클라이언트에게 시간대별 사용량 및 관련 상세정보 전달
 
     private DayOfWeek dayOfWeek; // 요일
