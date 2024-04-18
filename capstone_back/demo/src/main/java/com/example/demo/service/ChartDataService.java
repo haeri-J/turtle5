@@ -8,6 +8,7 @@ import com.example.demo.entity.WebCamLog;
 import com.example.demo.repository.AlarmLogRepository;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.WebCamLogRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ChartDataService {
 
@@ -91,6 +93,8 @@ public class ChartDataService {
             previousLog = currentLog;
         }
 
+        log.info("Correct Posture Duration Calculated: {}", correctPostureDuration); // 로그 추가
+
         return correctPostureDuration;
     }
 
@@ -100,6 +104,8 @@ public class ChartDataService {
 
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
+
+        log.info("Calculating Correct Posture Percentage for Client ID: {}", clientId); // 로그 추가
 
         // 오늘 날짜의 WebCamLog 조회
         List<WebCamLog> todaysWebCamLogs = webCamLogRepository.findByClientIdAndStartTime(client, today);
@@ -117,8 +123,10 @@ public class ChartDataService {
 
         if (totalWebCamDuration == 0) return 0; // 웹캠 실행 시간이 0인 경우를 처리
 
-        // 상위 퍼센트 계산을 위한 로직 추가 필요
-        return (double) correctPostureDuration / totalWebCamDuration * 100;
+        double percentage = (double) correctPostureDuration / totalWebCamDuration * 100;
+
+        log.info("Total WebCam Duration: {}, Correct Posture Duration: {}, Percentage: {}", totalWebCamDuration, correctPostureDuration, percentage); // 로그 추가
+        return percentage;
     }
 
     // 모든 사용자의 clientId 목록을 가져오는 메서드
@@ -133,6 +141,8 @@ public class ChartDataService {
         LocalDate today = LocalDate.now();
         // 모든 사용자의 clientId 목록을 가져옴 (가정)
         List<Long> allClientIds = getAllClientIds();
+
+        log.info("Calculating Overall Posture Rank for Client ID: {}", currentClientId); // 로그 추가
 
         // 현재 사용자의 자세 유지 비율 계산
         double currentUserPosturePercentage = calculateCorrectPosturePercentage(currentClientId);
@@ -151,6 +161,8 @@ public class ChartDataService {
 
         // 상위 퍼센트 계산// 반환 값이 90이면, 현재 사용자의 자세 유지 비율이 모든 사용자 중 상위 10%에 해당함을 의미
         double rankPercentage = (1 - ((double) higherCount / allUsersPosturePercentages.size())) * 100;
+
+        log.info("Current User Posture Percentage: {}, Rank Percentage: {}", currentUserPosturePercentage, rankPercentage); // 로그 추가
         return new PosturePercentageDto(currentClientId, currentUserPosturePercentage, rankPercentage);
     }
 
