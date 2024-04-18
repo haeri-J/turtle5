@@ -12,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -73,34 +70,23 @@ public class ChartDataService {
 
     //기능 2.
 
-    //사용자의 자세를 올바르게 유지한 시간을 더함.
-    private long calculateCorrectPostureDuration(List<AlarmLog> alarmLogs) {
-        // 알람 로그를 알람 시간에 따라 오름차순으로 정렬
-        alarmLogs.sort(Comparator.comparing(AlarmLog::getDateTime));
+    // 사용자의 자세를 올바르게 유지하지 않은 시간을 계산
+    private long calculateIncorrectPostureDuration(List<AlarmLog> todaysAlarmLogs) {
 
-        long correctPostureDuration = 0;
-        AlarmLog previousLog = null;
+        long incorrectPostureDuration = todaysAlarmLogs.size() * 5L; // 알람 하나당 5분
 
-        for (AlarmLog currentLog : alarmLogs) {
-            // 첫 번째 로그가 아니라면
-            if (previousLog != null) {
-                // 이전 알람과 현재 알람 사이의 시간 간격을 계산
-                long durationBetweenAlarms = Duration.between(previousLog.getDateTime().toLocalTime(), currentLog.getDateTime().toLocalTime()).toMinutes();
-                // 자세를 올바르게 유지한 시간에 더함
-                correctPostureDuration += durationBetweenAlarms;
-            }
-            // 현재 로그를 이전 로그로 설정
-            previousLog = currentLog;
-        }
+        log.info("Incorrect Posture Duration Calculated: {} minutes", incorrectPostureDuration);
 
-        log.info("Correct Posture Duration Calculated: {}", correctPostureDuration); // 로그 추가
-
-        return correctPostureDuration;
+        return incorrectPostureDuration;
     }
+
 
     // 사용자의 clientId를 인자로 받아서 웹캠 총 실행 시간을 계산하고, 자세를 올바르게 유지한 시간을 계산(메소드 분리)하여 퍼센티지를 구함.
     public double calculateCorrectPosturePercentage(Long clientId) {
-        LocalDateTime today = LocalDateTime.now();
+
+        LocalDate todayDate = LocalDate.now();
+        LocalDateTime startOfDay = todayDate.atStartOfDay();
+        LocalDateTime endOfDay = todayDate.atTime(LocalTime.MAX);
 
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
@@ -108,24 +94,34 @@ public class ChartDataService {
         log.info("Calculating Correct Posture Percentage for Client ID: {}", clientId); // 로그 추가
 
         // 오늘 날짜의 WebCamLog 조회
-        List<WebCamLog> todaysWebCamLogs = webCamLogRepository.findByClientIdAndStartTime(client, today);
+        List<WebCamLog> todaysWebCamLogs = webCamLogRepository.findByClientIdAndStartTimeBetween(client, startOfDay, endOfDay);
 
         // 오늘 날짜의 AlarmLog 조회
-        List<AlarmLog> todaysAlarmLogs = alarmLogRepository.findByClientIdAndDateTime(client, today);
+        List<AlarmLog> todaysAlarmLogs = alarmLogRepository.findByClientIdAndDateTimeBetween(client, startOfDay, endOfDay);
+
+        log.info("todaysWebCamLogs: {}",todaysWebCamLogs);
+        log.info("todaysAlarmLogs: {}",todaysAlarmLogs);
 
         // 웹캠의 총 실행 시간 계산
         long totalWebCamDuration = todaysWebCamLogs.stream()
                 .mapToLong(log -> Duration.between(log.getStartTime().toLocalTime(), log.getEndTime().toLocalTime()).toMinutes())
                 .sum();
 
-        // 자세를 올바르게 유지한 시간 계산 (알람 로그를 기반으로)
-        long correctPostureDuration = calculateCorrectPostureDuration(todaysAlarmLogs);
+        // 자세를 올바르게 유지하지 않은 시간 계산 (알람 로그를 기반으로)
+        long IncorrectPostureDuration = calculateIncorrectPostureDuration(todaysAlarmLogs);
 
         if (totalWebCamDuration == 0) return 0; // 웹캠 실행 시간이 0인 경우를 처리
 
-        double percentage = (double) correctPostureDuration / totalWebCamDuration * 100;
+        // IncorrectPostureDuration가 totalWebCamDuration 보다 크지 않다는 조건 추가
+        if (IncorrectPostureDuration >= totalWebCamDuration) {
+            // 이 경우에는 비율 계산이 의미가 없거나 잘못될 수 있으므로, 0 또는 다른 적절한 값으로 처리
+            // 예를 들어, 100% 부정확한 자세로 해석할 수도 있으므로 0을 반환할 수 있음
+            return 0;
+        }
 
-        log.info("Total WebCam Duration: {}, Correct Posture Duration: {}, Percentage: {}", totalWebCamDuration, correctPostureDuration, percentage); // 로그 추가
+        double percentage = (double) ((totalWebCamDuration-IncorrectPostureDuration) / totalWebCamDuration * 100);
+
+        log.info("Total WebCam Duration: {}, Correct Posture Duration: {}, Percentage: {}", totalWebCamDuration, IncorrectPostureDuration, percentage); // 로그 추가
         return percentage;
     }
 
