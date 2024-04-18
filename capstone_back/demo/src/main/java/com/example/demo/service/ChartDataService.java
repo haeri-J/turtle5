@@ -134,7 +134,6 @@ public class ChartDataService {
 
     //현재 사용자와 모든 사용자의 자세유지 비율을 계산하여 현재 사용자의 비율이 상위 몇 퍼센트인지를 계산.
     public PosturePercentageDto calculateOverallPostureRank(Long currentClientId) {
-        LocalDate today = LocalDate.now();
         // 모든 사용자의 clientId 목록을 가져옴 (가정)
         List<Long> allClientIds = getAllClientIds();
 
