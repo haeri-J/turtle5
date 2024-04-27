@@ -12,7 +12,7 @@ import java.util.stream.DoubleStream;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(name = "WebCamLog")
+@Table(name = "webCamLog")
 @Entity
 @Getter
 @Setter
@@ -27,9 +27,6 @@ public class WebCamLog {
 
     @Column(name = "end_time",nullable = false)
     private LocalDateTime endTime;
-
-    @Column(name = "cam_usedDate",nullable = false)
-    private LocalDateTime camUseDate;
 
     @ManyToOne(fetch = FetchType.LAZY)// 다대일 관계 설정
     @JoinColumn(name = "client_id", nullable = false) // 외래키 컬럼 지정

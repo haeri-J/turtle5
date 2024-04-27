@@ -4,16 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-@Table(name = "Client")
+@Table(name = "client")
 @Entity
 @Getter
+@Builder
 @Setter
 public class Client {
 
@@ -22,7 +24,7 @@ public class Client {
     @Column(name = "client_id")
     private Long clientId;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "phone_no")
@@ -34,14 +36,13 @@ public class Client {
     @Column
     private String gender;
 
-    @Column
+    @Column(nullable = false, unique = true, length = 30)
     private String email;
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "password_id", referencedColumnName = "password_id")
     private PW passwordId;
 
 
-
 }
-
