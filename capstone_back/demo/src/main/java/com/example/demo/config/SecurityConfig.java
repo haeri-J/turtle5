@@ -17,14 +17,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private AuthenticationConfiguration authenticationConfiguration;
+    private final AuthenticationConfiguration authenticationConfiguration;
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)  throws Exception{
-        return configuration.getAuthenticationManager();
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
+        this.authenticationConfiguration = authenticationConfiguration;
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
+        return configuration.getAuthenticationManager();
+    }
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
@@ -42,7 +44,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/", "/signup/**").permitAll() // 올바른 메소드 이름으로 수정
-                        .requestMatchers("/logout","/inquery","/percentage","/webcam/**").hasAnyRole("USER") // 올바른 권한명으로 수정
+                        .requestMatchers("/logout","/inquery","/percentage","/webcam/**").hasRole("USER") // 올바른 권한명으로 수정
                         .anyRequest().authenticated()
                 );
 
