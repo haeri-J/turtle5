@@ -21,7 +21,7 @@ public class JWTUtil {
     //- 만료일
 
     private final SecretKey secretKey; // JWT 토큰 객체 키를 저장할 시크릿 키
-    private long expiredMs = 3600000; // 1시간 (1시간 = 60분 = 3600초 = 3600000밀리초)
+    private long expiredMs = 30 * 60 * 1000L; // 1시간 (1시간 = 60분 = 3600초 = 3600000밀리초)
     //JWTUtil 생성자
     public JWTUtil(@Value("${spring.jwtsecretkey}") String secret) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));

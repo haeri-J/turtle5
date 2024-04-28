@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.dto.ClientForm;
+import com.example.demo.dto.CustomerUserDetail;
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.PW;
@@ -59,22 +60,16 @@ public class ClientService implements UserDetailsService  {
         return clientRepository.findByEmail(email).isEmpty(); // null이면 이메일 사용 가능
     }
 
-//    public String login(LoginRequestDto loginRequestDto) {
-//        // Retrieve user by email from the database
-//        Optional<Client> client = clientRepository.findByEmail(loginRequestDto.getEmail());
-//        PW hashedPW = passwordRepository.findByPasswordId(client.orElseThrow().getPasswordId());
-//
-//        // Check if the user exists and if the provided password matches
-//        if (bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), hashedPW.getPasswordHash())) {
-//            return "success";
-//        } else {
-//            return "failure";
-//        }
-//    }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        if (username == null) {
+            throw new UsernameNotFoundException("이메일이 존재하지 않습니다.");
+        }
+
+        Client userData = clientRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일로는 찾을 수 없습니다: " + username));
+
+        return new CustomerUserDetail(userData);
     }
 }
 
