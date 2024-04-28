@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @ToString
 @Table(name = "client")
 @Entity
@@ -44,5 +44,9 @@ public class Client {
     @JoinColumn(name = "password_id", referencedColumnName = "password_id")
     private PW passwordId;
 
+    private String role;
 
+    public String getPassword() {
+        return passwordId.getPasswordHash();
+    }
 }
