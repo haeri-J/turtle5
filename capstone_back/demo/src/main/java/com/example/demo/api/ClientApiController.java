@@ -69,7 +69,7 @@ public class ClientApiController {
     }
 
     // Controller 계층
-    @PostMapping("//signup/id_check")
+    @PostMapping("/signup/id_check")
     public ResponseEntity<?> checkEmail(@RequestBody EmailDto emailDto) {
         if(clientService.checkEmailUnique(emailDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");
