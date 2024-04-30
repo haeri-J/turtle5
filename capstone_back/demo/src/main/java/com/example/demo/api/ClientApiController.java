@@ -1,9 +1,6 @@
 package com.example.demo.api;
 
-import com.example.demo.dto.ClientForm;
-import com.example.demo.dto.CustomerUserDetail;
-import com.example.demo.dto.JwtResponse;
-import com.example.demo.dto.LoginRequestDto;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Client;
 import com.example.demo.jwt.JWTUtil;
 import com.example.demo.service.ClientService;
@@ -21,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j//log.info를 쓰기 위한 어노테이션
 @RestController//컨트롤러라고 명명하는 어노테이션
@@ -68,5 +66,14 @@ public class ClientApiController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+    }
+
+    // Controller 계층
+    @PostMapping("//signup/id_check")
+    public ResponseEntity<?> checkEmail(@RequestBody EmailDto emailDto) {
+        if(clientService.checkEmailUnique(emailDto.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");
+        }
+        return ResponseEntity.ok(emailDto); // 중복되지 않은 경우, 200 OK 상태 코드와 함께 EmailDto 반환
     }
 }

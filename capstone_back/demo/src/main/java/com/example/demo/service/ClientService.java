@@ -3,6 +3,7 @@ package com.example.demo.service;
 
 import com.example.demo.dto.ClientForm;
 import com.example.demo.dto.CustomerUserDetail;
+import com.example.demo.dto.EmailDto;
 import com.example.demo.dto.LoginRequestDto;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.PW;
@@ -71,5 +72,12 @@ public class ClientService implements UserDetailsService  {
 
         return new CustomerUserDetail(userData);
     }
+
+
+
+    public boolean checkEmailUnique(String email) {
+        return !isEmailUnique(email);
+    }
+
 }
 
