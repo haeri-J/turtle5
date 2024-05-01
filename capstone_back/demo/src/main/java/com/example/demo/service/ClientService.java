@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,8 @@ public class ClientService {
     private AuthenticationManagerBuilder authenticationManagerBuilder;
 
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
     // 클라이언트 정보를 저장하고 저장된 정보를 반환하는 메서드
     public Client saveClient(ClientForm dto) {
 
@@ -43,7 +44,7 @@ public class ClientService {
         }
 
         // 비밀번호 해싱
-        String hashedPassword = bCryptPasswordEncoder.encode(dto.getPassword());
+        String hashedPassword = passwordEncoder.encode(dto.getPassword());
 
         // PW 테이블에 비밀번호 저장
         PW passwordEntity = new PW();
