@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -34,7 +37,8 @@ public class ClientForm {//dto
 
     //dto를 entity로 변환하는 함수
     public Client toEntity(PW passwordEntity) {
-        String role = "USER";
-        return new Client(clientId, name,phoneNo, birth, gender, email, passwordEntity, role);
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        return new Client(clientId, name,phoneNo, birth, gender, email, passwordEntity, roles);
     }
 }
