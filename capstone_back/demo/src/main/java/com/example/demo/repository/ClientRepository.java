@@ -6,11 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    Client findByEmail(String email);
 
-    @Query("SELECT c.clientId FROM Client c")
-    List<Long> findAllClientIds();
+    Optional<Client> findByEmail(String email);
+
+//    Optional<Client> findByRefreshToken(String refreshToke);
+
 
 }

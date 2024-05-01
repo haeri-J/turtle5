@@ -17,10 +17,9 @@ public class WebCamLogDto {
     private Long camLogId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private LocalDateTime cam_useDate;
 
 
     public WebCamLog toEntity(Client clientId) {
-        return new WebCamLog(camLogId, startTime, endTime, cam_useDate, clientId);
+        return new WebCamLog(camLogId, startTime, endTime, clientId);
     }
 }

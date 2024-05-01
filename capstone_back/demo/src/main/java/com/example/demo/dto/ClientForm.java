@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -31,8 +34,11 @@ public class ClientForm {//dto
     @Length(min = 4, max = 16, message = "비밀번호는 4자 이상, 16자 이하로 입력해주세요.")
     private String password; // 외래키를 나타내는 필드는 ID만 전달하도록 합니다.
 
+
     //dto를 entity로 변환하는 함수
     public Client toEntity(PW passwordEntity) {
-        return new Client(clientId, name,phoneNo, birth, gender, email, passwordEntity);
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+        return new Client(clientId, name,phoneNo, birth, gender, email, passwordEntity, roles);
     }
 }
