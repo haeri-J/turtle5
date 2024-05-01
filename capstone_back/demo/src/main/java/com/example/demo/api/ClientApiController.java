@@ -2,7 +2,6 @@ package com.example.demo.api;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Client;
-import com.example.demo.jwt.JWTUtil;
 import com.example.demo.service.ClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -11,10 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,10 +21,6 @@ public class ClientApiController {
 
     @Autowired
     private ClientService clientService;// 서비스 객체 주입
-    @Autowired
-    private JWTUtil jwtUtil;
-    @Autowired
-    AuthenticationManager authenticationManager;
 
     private static final Logger logger = LoggerFactory.getLogger(ClientApiController.class);
 
@@ -45,26 +36,11 @@ public class ClientApiController {
 
     //로그인 매핑
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDto loginRequest) {
-        logger.info("로그인 시도: {}", loginRequest.getEmail());
-        try {
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            // 인증 성공 후, JWT 생성
-            CustomerUserDetail userDetails = (CustomerUserDetail) authentication.getPrincipal();
-
-            String jwt = jwtUtil.createJwt(userDetails.getUsername(), userDetails.getAuthorities()); // 1시간 만료
-
-            logger.info("로그인 성공: {}", loginRequest.getEmail());
-            return ResponseEntity.ok(new JwtResponse(jwt));
-        } catch (AuthenticationException e) {
-            logger.error("로그인 실패: {}", loginRequest.getEmail(), e);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public JwtToken login(@RequestBody LoginRequestDto loginRequest) {
+        String memberId = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
+        JwtToken jwtToken = clientService.login(memberId, password);
+        return jwtToken;
 
     }
 
