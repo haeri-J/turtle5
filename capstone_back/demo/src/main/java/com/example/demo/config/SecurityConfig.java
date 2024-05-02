@@ -22,17 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
-
-//    private final AuthenticationConfiguration authenticationConfiguration;
-//
-//    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration) {
-//        this.authenticationConfiguration = authenticationConfiguration;
-//    }
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception{
-//        return configuration.getAuthenticationManager();
-//    }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
