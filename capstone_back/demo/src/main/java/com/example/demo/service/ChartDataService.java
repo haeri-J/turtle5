@@ -147,19 +147,22 @@ public class ChartDataService {
         List<Double> allUsersPosturePercentages = new ArrayList<>();
         for (Long clientId : allClientIds) {
             double posturePercentage = calculateCorrectPosturePercentage(clientId);
-            allUsersPosturePercentages.add(posturePercentage);
+                allUsersPosturePercentages.add(posturePercentage);
         }
+        log.info("모든 사용자 자세 비율 계산 리스트 출력: {}", allUsersPosturePercentages);
 
         // 현재 사용자의 비율이 상위 몇 퍼센트인지 계산
         long higherCount = allUsersPosturePercentages.stream()
                 .filter(percentage -> percentage > currentUserPosturePercentage)
                 .count();
 
+        log.info("higerCount 총 사용자 중에 몇등인지 {} ",higherCount);
+
         // 상위 퍼센트 계산// 반환 값이 90이면, 현재 사용자의 자세 유지 비율이 모든 사용자 중 상위 10%에 해당함을 의미
         int rankPercentage = (int) ((1 - ((double) higherCount / allUsersPosturePercentages.size())) * 100);
 
         log.info("Current User Posture Percentage: {}, Rank Percentage: {}", currentUserPosturePercentage, rankPercentage); // 로그 추가
-        return new PosturePercentageDto(currentClientId, currentUserPosturePercentage, rankPercentage);
+        return new PosturePercentageDto(currentClientId, currentUserPosturePercentage, 100-rankPercentage);
     }
 
 
