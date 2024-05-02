@@ -44,7 +44,7 @@ public class LogApiController {
 
 
     @PostMapping("/webcam/log")
-    public ResponseEntity<WebCamLog> recodeLog(@RequestBody WebCamLogDto webcamlog, @AuthenticationPrincipal Client client){
+    public ResponseEntity<WebCamLog> recodeLog(@RequestBody WebCamLogDto webcamlog){
 
         Long clientId = authenticationService.getCurrentUserId();
         log.info(String.valueOf(clientId));

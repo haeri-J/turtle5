@@ -75,7 +75,7 @@ public class ChartDataService {
 
         long incorrectPostureDuration = todaysAlarmLogs.size() * 5L; // 알람 하나당 5분
 
-        log.info("Incorrect Posture Duration Calculated: {} minutes", incorrectPostureDuration);
+        log.info("올바르지 않은 자세 총 시간: {} minutes", incorrectPostureDuration);
 
         return incorrectPostureDuration;
     }
@@ -91,7 +91,7 @@ public class ChartDataService {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
 
-        log.info("Calculating Correct Posture Percentage for Client ID: {}", clientId); // 로그 추가
+        log.info("포즈 퍼센테이지 계산함수에서의  Client ID: {}", clientId); // 로그 추가
 
         // 오늘 날짜의 WebCamLog 조회
         List<WebCamLog> todaysWebCamLogs = webCamLogRepository.findByClientIdAndStartTimeBetween(client, startOfDay, endOfDay);
@@ -99,16 +99,16 @@ public class ChartDataService {
         // 오늘 날짜의 AlarmLog 조회
         List<AlarmLog> todaysAlarmLogs = alarmLogRepository.findByClientIdAndDateTimeBetween(client, startOfDay, endOfDay);
 
-        log.info("todaysWebCamLogs: {}",todaysWebCamLogs);
-        log.info("todaysAlarmLogs: {}",todaysAlarmLogs);
+        log.info("todaysWebCamLogs in 포즈 퍼센트지 계산 함수: {}",todaysWebCamLogs);
+        log.info("todaysAlarmLogs in 포즈 퍼센트지 계산 함수: {}",todaysAlarmLogs);
 
         // 웹캠의 총 실행 시간 계산
-        long totalWebCamDuration = todaysWebCamLogs.stream()
+        double totalWebCamDuration = todaysWebCamLogs.stream()
                 .mapToLong(log -> Duration.between(log.getStartTime().toLocalTime(), log.getEndTime().toLocalTime()).toMinutes())
                 .sum();
 
         // 자세를 올바르게 유지하지 않은 시간 계산 (알람 로그를 기반으로)
-        long IncorrectPostureDuration = calculateIncorrectPostureDuration(todaysAlarmLogs);
+        double IncorrectPostureDuration = calculateIncorrectPostureDuration(todaysAlarmLogs);
 
         if (totalWebCamDuration == 0) return 0; // 웹캠 실행 시간이 0인 경우를 처리
 
@@ -121,7 +121,7 @@ public class ChartDataService {
 
         double percentage = (double) ((totalWebCamDuration-IncorrectPostureDuration) / totalWebCamDuration * 100);
 
-        log.info("Total WebCam Duration: {}, Correct Posture Duration: {}, Percentage: {}", totalWebCamDuration, IncorrectPostureDuration, percentage); // 로그 추가
+        log.info("포즈 퍼센트지 계산 함수::Total WebCam Duration: {}, InCorrect Posture Duration: {}, Percentage: {}", totalWebCamDuration, IncorrectPostureDuration, percentage); // 로그 추가
         return percentage;
     }
 
@@ -140,7 +140,8 @@ public class ChartDataService {
         log.info("Calculating Overall Posture Rank for Client ID: {}", currentClientId); // 로그 추가
 
         // 현재 사용자의 자세 유지 비율 계산
-        double currentUserPosturePercentage = calculateCorrectPosturePercentage(currentClientId);
+        int currentUserPosturePercentage = (int) calculateCorrectPosturePercentage(currentClientId);
+        log.info("최종 함수에 잘 도착했는지 currentClientId 기반: {}",currentUserPosturePercentage);
 
         // 모든 사용자의 자세 유지 비율 계산
         List<Double> allUsersPosturePercentages = new ArrayList<>();
@@ -155,7 +156,7 @@ public class ChartDataService {
                 .count();
 
         // 상위 퍼센트 계산// 반환 값이 90이면, 현재 사용자의 자세 유지 비율이 모든 사용자 중 상위 10%에 해당함을 의미
-        double rankPercentage = (1 - ((double) higherCount / allUsersPosturePercentages.size())) * 100;
+        int rankPercentage = (int) ((1 - ((double) higherCount / allUsersPosturePercentages.size())) * 100);
 
         log.info("Current User Posture Percentage: {}, Rank Percentage: {}", currentUserPosturePercentage, rankPercentage); // 로그 추가
         return new PosturePercentageDto(currentClientId, currentUserPosturePercentage, rankPercentage);
