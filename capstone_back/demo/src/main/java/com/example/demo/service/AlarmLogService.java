@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AlarmLogDto;
+import com.example.demo.dto.WebCamLogDto;
 import com.example.demo.entity.AlarmLog;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.WebCamLog;
@@ -31,6 +32,6 @@ public class AlarmLogService {
         AlarmLog alarmLog = alarmLogDto.toEntity(client);
 
         // 알람 로그 저장
-        return alarmLog.getId() != null ? null : (AlarmLog)this.alarmLogRepository.save(alarmLog);
+        return alarmLog.getAlarmLog_id() != null ? null : (AlarmLog)this.alarmLogRepository.save(alarmLog);
     }
 }

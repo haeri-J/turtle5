@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -18,9 +16,10 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlarmLog {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long alarmLog_id;
 
     @Column(name = "alarm_ringTime", nullable = false)
     private LocalDateTime dateTime; // 알람이 발생한 시간과 날짜
