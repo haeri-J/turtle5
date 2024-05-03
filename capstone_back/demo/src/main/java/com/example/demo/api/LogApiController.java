@@ -4,6 +4,7 @@ package com.example.demo.api;
 import com.example.demo.dto.AlarmLogDto;
 import com.example.demo.dto.WebCamLogDto;
 import com.example.demo.entity.AlarmLog;
+import com.example.demo.entity.Client;
 import com.example.demo.entity.WebCamLog;
 import com.example.demo.service.AlarmLogService;
 import com.example.demo.service.AuthenticationService;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j//log.info를 쓰기 위한 어노테이션
@@ -45,6 +47,7 @@ public class LogApiController {
     public ResponseEntity<WebCamLog> recodeLog(@RequestBody WebCamLogDto webcamlog){
 
         Long clientId = authenticationService.getCurrentUserId();
+        log.info(String.valueOf(clientId));
 
         WebCamLog created = webcamLogService.saveLog(clientId,webcamlog);
 

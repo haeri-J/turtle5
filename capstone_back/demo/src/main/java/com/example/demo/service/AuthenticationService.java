@@ -7,8 +7,12 @@ import com.example.demo.entity.Client;
 import com.example.demo.entity.RefreshToken;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.RefreshTokenRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,6 +20,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Date;
 
+
+
+@Slf4j
 @Service
 public class AuthenticationService {
 
@@ -52,26 +59,31 @@ public class AuthenticationService {
         return new AccessToken(token, expiryDate);
     }
 
+    // 현재 인증된 사용자 ID를 가져옴.
+    public Long getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-//    public void logoutUser(String userId) {
-//        Optional<RefreshToken> refreshTokenOptional = refreshTokenRepository.findByClient_Email(userId);
-//        refreshTokenOptional.ifPresent(refreshToken -> {
-//            refreshTokenRepository.delete(refreshToken);
-//            // 사용자 로그아웃 처리
-//        });
-//    }
+        if (authentication == null || !authentication.isAuthenticated()) {
+            log.error("인증된 사용자가 없습니다.");
+            throw new IllegalStateException("인증된 사용자 없음.");
+        }
 
-    //현재 이용자를 가져옴..
-    public Long getCurrentUserId() {//우선 무조건 1번 회원 리턴하도록 함. 후에 수정 꼭 필요!
-//        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        if (principal instanceof CustomerUserDetail) {
-//            String currentEmail = ((CustomerUserDetail)principal).getUsername();
-//            Client client = clientRepository.findByEmail(currentEmail).orElseThrow();
-//            return client.getClientId();
-//        } else {
-//            throw new IllegalStateException("인증된 사용자 정보를 얻을 수 없습니다.");
-//        }
-        return 1L;
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            Optional<Client> client = clientRepository.findByEmail(userDetails.getUsername());
+
+            if (client.isPresent()) {
+                return client.get().getClientId();
+            } else {
+                log.error("사용자가 데이터베이스에서 찾을 수 없습니다.");
+                throw new IllegalStateException("사용자를 찾을 수 없음.");
+            }
+        } else {
+            log.error("principal 객체가 UserDetails의 인스턴스가 아닙니다.");
+            throw new IllegalStateException("잘못된 사용자 타입.");
+        }
     }
+
 
 }

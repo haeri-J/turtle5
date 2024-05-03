@@ -64,6 +64,7 @@ public class Client implements UserDetails {
         return email;
     }
 
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
