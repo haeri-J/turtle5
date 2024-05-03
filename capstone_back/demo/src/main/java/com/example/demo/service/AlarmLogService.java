@@ -32,6 +32,6 @@ public class AlarmLogService {
         AlarmLog alarmLog = alarmLogDto.toEntity(client);
 
         // 알람 로그 저장
-        return alarmLog.getId() != null ? null : (AlarmLog)this.alarmLogRepository.save(alarmLog);
+        return alarmLog.getAlarmLog_id() != null ? null : (AlarmLog)this.alarmLogRepository.save(alarmLog);
     }
 }

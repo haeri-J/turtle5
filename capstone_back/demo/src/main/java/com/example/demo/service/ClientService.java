@@ -5,9 +5,12 @@ import com.example.demo.dto.ClientForm;
 import com.example.demo.dto.JwtToken;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.PW;
+import com.example.demo.entity.RefreshToken;
 import com.example.demo.jwt.JwtTokenProvider;
+import com.example.demo.jwt.RedisUtil;
 import com.example.demo.repository.ClientRepository;
 import com.example.demo.repository.PasswordRepository;
+import com.example.demo.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,16 +31,19 @@ public class ClientService {
     @Autowired
     private PasswordRepository passwordRepository; // 비밀번호 정보를 다루는 레포지토리
     @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
+    @Autowired
     private JwtTokenProvider jwtTokenProvider;
     @Autowired
     private AuthenticationManagerBuilder authenticationManagerBuilder;
+    @Autowired
+    private RedisUtil redisUtil;
 
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
     // 클라이언트 정보를 저장하고 저장된 정보를 반환하는 메서드
     public Client saveClient(ClientForm dto) {
-
         // 이메일이 시스템에 이미 존재하는 경우
         if (!isEmailUnique(dto.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");
@@ -77,10 +83,20 @@ public class ClientService {
         // authenticate 매서드가 실행될 때 CustomUserDetailsService 에서 만든 loadUserByUsername 메서드가 실행
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
+        // 3. 인증 정보를 기반으로 JWT 토큰 생성 -> 둘 중 어느 토큰 생성??
         JwtToken jwtToken = jwtTokenProvider.generateToken(authentication);
 
         return jwtToken;
+    }
+
+    public String logout(String accessToken, Client client) {
+
+        // refreshToken 테이블의 refreshToken 삭제
+        refreshTokenRepository.deleteByToken(client.getEmail());
+        // Redis에 accessToken 사용 못하도록 등록
+        redisUtil.setBlackList(accessToken, "accessToken", 5);
+
+        return "Successfully Logout";
     }
 }
 

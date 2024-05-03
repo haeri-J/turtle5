@@ -40,7 +40,6 @@ public class Client implements UserDetails {
     @Column(nullable = false, unique = true, length = 30)
     private String email;
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "password_id", referencedColumnName = "password_id")
     private PW passwordId;
