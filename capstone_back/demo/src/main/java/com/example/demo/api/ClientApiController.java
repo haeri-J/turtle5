@@ -58,7 +58,7 @@ public class ClientApiController {
     @PostMapping("/signup/id_check")
     public ResponseEntity<?> checkEmail(@RequestBody EmailDto emailDto) {
         if(clientService.checkEmailUnique(emailDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");
         }
         return ResponseEntity.ok(emailDto); // 중복되지 않은 경우, 200 OK 상태 코드와 함께 EmailDto 반환
     }
