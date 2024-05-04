@@ -2,6 +2,7 @@ package com.example.demo.api;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.Client;
+import com.example.demo.entity.PW;
 import com.example.demo.service.ClientService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j//log.info를 쓰기 위한 어노테이션
@@ -62,4 +60,33 @@ public class ClientApiController {
         }
         return ResponseEntity.ok(emailDto); // 중복되지 않은 경우, 200 OK 상태 코드와 함께 EmailDto 반환
     }
+
+
+    //아이디 찾기
+    @PostMapping("/findID")
+    public ResponseEntity<String> findID(@RequestBody FindIDDto findIDDto){
+        String created = clientService.checktoFindId(findIDDto);
+        return (created != null) ?
+                ResponseEntity.status(HttpStatus.OK).body(created) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @PostMapping("/findPassword")
+    public ResponseEntity<String> findPassword(@RequestBody FindPasswordDto findPasswordDto){
+        String created = clientService.checktoFindPassword(findPasswordDto);
+        return (created != null) ?
+                ResponseEntity.status(HttpStatus.OK).body(created) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @PostMapping("/setPassword")
+    public ResponseEntity<?> setPassword(@RequestBody SetPassword setPassword){
+        PW created = clientService.setPassword(setPassword);
+        return (created != null) ?
+                ResponseEntity.status(HttpStatus.OK).build() :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
+    }
+
+
 }

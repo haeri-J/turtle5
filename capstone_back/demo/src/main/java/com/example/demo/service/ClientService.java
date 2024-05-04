@@ -1,8 +1,7 @@
 package com.example.demo.service;
 
 
-import com.example.demo.dto.ClientForm;
-import com.example.demo.dto.JwtToken;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.PW;
 import com.example.demo.entity.RefreshToken;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -97,6 +97,38 @@ public class ClientService {
         redisUtil.setBlackList(accessToken, "accessToken", 5);
 
         return "Successfully Logout";
+    }
+
+    //아이디 찾기 서비스 구현
+    public String checktoFindId(FindIDDto findIDDto) {
+        String checkname = findIDDto.getName();
+        String checkphoneNo = findIDDto.getPhoneNo();
+        Client checkClient = clientRepository.findByNameAndPhoneNo(checkname,checkphoneNo);
+        if (checkClient != null) {
+            return checkClient.getEmail();
+        } else {
+            return "회원 정보를 조회할 수 없습니다.";
+        }
+    }
+
+    public String checktoFindPassword(FindPasswordDto findPasswordDto) {
+        Client checkClient = clientRepository.findByNameAndPhoneNoAndEmail(findPasswordDto.getName(),findPasswordDto.getPhoneNo(),findPasswordDto.getEmail());
+        if (checkClient != null) {
+            return checkClient.getEmail();
+        } else {
+            return "fail";
+        }
+    }
+
+    public PW setPassword(SetPassword setPassword) {
+        Client setdata = clientRepository.findByEmail(setPassword.getEmail()).orElseThrow(() -> new UsernameNotFoundException("잘못된 입력값입니다."));
+        String hashedPassword = passwordEncoder.encode(setPassword.getPassword());
+        // PW 테이블에 비밀번호 저장
+        PW passwordEntity = new PW();
+        passwordEntity.setPasswordId(setdata.getPasswordId().getPasswordId());
+        passwordEntity.setPasswordHash(hashedPassword);
+        return passwordRepository.save(passwordEntity);
+
     }
 }
 
