@@ -161,8 +161,11 @@ public class ChartDataService {
         // 상위 퍼센트 계산// 반환 값이 90이면, 현재 사용자의 자세 유지 비율이 모든 사용자 중 상위 10%에 해당함을 의미
         int rankPercentage = (int) ((1 - ((double) higherCount / allUsersPosturePercentages.size())) * 100);
 
+        Client currentClient = clientRepository.findById(currentClientId).orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + currentClientId));
+
+
         log.info("Current User Posture Percentage: {}, Rank Percentage: {}", currentUserPosturePercentage, rankPercentage); // 로그 추가
-        return new PosturePercentageDto(currentClientId, currentUserPosturePercentage, 100-rankPercentage);
+        return new PosturePercentageDto(currentClient.getEmail(), currentUserPosturePercentage, 100-rankPercentage);
     }
 
 

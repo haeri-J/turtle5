@@ -37,11 +37,13 @@ public class ClientApiController {
 
     //로그인 매핑
     @PostMapping("/login")
-    public JwtToken login(@RequestBody LoginRequestDto loginRequest) {
+    public ResponseEntity<JwtToken> login(@RequestBody LoginRequestDto loginRequest) {
         String memberId = loginRequest.getEmail();
         String password = loginRequest.getPassword();
         JwtToken jwtToken = clientService.login(memberId, password);
-        return jwtToken;
+        return (jwtToken != null) ?
+                ResponseEntity.status(HttpStatus.OK).body(jwtToken) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
     }
 
