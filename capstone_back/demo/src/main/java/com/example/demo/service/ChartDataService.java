@@ -73,7 +73,7 @@ public class ChartDataService {
     // 사용자의 자세를 올바르게 유지하지 않은 시간을 계산
     private long calculateIncorrectPostureDuration(List<AlarmLog> todaysAlarmLogs) {
 
-        long incorrectPostureDuration = todaysAlarmLogs.size() * 5L; // 알람 하나당 5분
+        long incorrectPostureDuration = todaysAlarmLogs.size() * 1L; // 알람 하나당 1분
 
         log.info("올바르지 않은 자세 총 시간: {} minutes", incorrectPostureDuration);
 
