@@ -3,18 +3,16 @@ package com.example.demo.api;
 import com.example.demo.dto.*;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.PW;
+import com.example.demo.service.AuthenticationService;
 import com.example.demo.service.ClientService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j//log.info를 쓰기 위한 어노테이션
 @RestController//컨트롤러라고 명명하는 어노테이션
@@ -22,7 +20,8 @@ public class ClientApiController {
 
     @Autowired
     private ClientService clientService;// 서비스 객체 주입
-
+    @Autowired
+    private AuthenticationService authenticationService;
     private static final Logger logger = LoggerFactory.getLogger(ClientApiController.class);
 
     // 클라이언트 정보 입력 폼 대신 클라이언트 정보를 받아서 처리하는 API
@@ -90,5 +89,13 @@ public class ClientApiController {
 
     }
 
+    @GetMapping("/mypage")
+    public ResponseEntity<UserInfoDto> getforMypage(){
+        Long clientId = authenticationService.getCurrentUserId();
+        UserInfoDto created = clientService.getforMypage(clientId);
+        return (created != null)?
+                ResponseEntity.status(HttpStatus.OK).body(created) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
+    }
 }

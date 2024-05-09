@@ -2,24 +2,28 @@ package com.example.demo.service;
 
 
 import com.example.demo.dto.*;
+import com.example.demo.entity.AlarmLog;
 import com.example.demo.entity.Client;
 import com.example.demo.entity.PW;
-import com.example.demo.entity.RefreshToken;
+import com.example.demo.entity.WebCamLog;
 import com.example.demo.jwt.JwtTokenProvider;
 import com.example.demo.jwt.RedisUtil;
-import com.example.demo.repository.ClientRepository;
-import com.example.demo.repository.PasswordRepository;
-import com.example.demo.repository.RefreshTokenRepository;
+import com.example.demo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -38,6 +42,10 @@ public class ClientService {
     private AuthenticationManagerBuilder authenticationManagerBuilder;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private WebCamLogRepository webCamLogRepository;
+    @Autowired
+    private AlarmLogRepository alarmLogRepository;
 
 
     @Autowired
@@ -129,6 +137,27 @@ public class ClientService {
         passwordEntity.setPasswordHash(hashedPassword);
         return passwordRepository.save(passwordEntity);
 
+    }
+
+    public UserInfoDto getforMypage(Long clientId) {
+        Client userInfo = clientRepository.findById(clientId).orElseThrow(()->new UsernameNotFoundException("사용자의 정보를 찾을 수 없습니다."));
+
+        LocalDate todayDate = LocalDate.now();
+        LocalDateTime startOfDay = todayDate.atStartOfDay();
+        LocalDateTime endOfDay = todayDate.atTime(LocalTime.MAX);
+
+        // 오늘 날짜의 WebCamLog 조회
+        List<WebCamLog> todaysWebCamLogs = webCamLogRepository.findByClientIdAndStartTimeBetween(userInfo, startOfDay, endOfDay);
+        // 오늘 날짜의 AlarmLog 조회
+        List<AlarmLog> todaysAlarmLogs = alarmLogRepository.findByClientIdAndDateTimeBetween(userInfo, startOfDay, endOfDay);
+
+        // 웹캠의 총 실행 시간 계산
+        double totalWebCamDuration = todaysWebCamLogs.stream()
+                .mapToLong(log -> Duration.between(log.getStartTime().toLocalTime(), log.getEndTime().toLocalTime()).toMinutes())
+                .sum();
+        double totalAlarmCounut = (long) todaysAlarmLogs.size();
+
+        return new UserInfoDto(userInfo.getName(),userInfo.getEmail(),userInfo.getPhoneNo(),(int)totalAlarmCounut, (int)totalWebCamDuration);
     }
 }
 
