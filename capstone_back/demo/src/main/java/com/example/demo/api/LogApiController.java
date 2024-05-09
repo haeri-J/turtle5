@@ -31,7 +31,7 @@ public class LogApiController {
     private AlarmLogService alarmLogService;
 
     // 알람 로그를 저장하는 POST 요청 처리
-    @PostMapping("/webcam/alarmloglo")//프론트에 맞게 수정 필수
+    @PostMapping("/webcam/alarmlog")//프론트에 맞게 수정 필수
     public ResponseEntity<?> saveAlarmLog(@RequestBody AlarmLogDto alarmLogDto) {
 
         Long clientId = authenticationService.getCurrentUserId();

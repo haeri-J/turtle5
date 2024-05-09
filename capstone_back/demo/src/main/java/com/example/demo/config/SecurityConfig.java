@@ -6,11 +6,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -41,8 +38,8 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/", "/signup/**", "/findID", "/findPassword", "/setPassword").permitAll() // 올바른 메소드 이름으로 수정
-                        .requestMatchers("/logout","/inquery","/percentage","/webcam/**").hasRole("USER") // 올바른 권한명으로 수정
+                        .requestMatchers("/login", "/signup/**", "/findID", "/findPassword", "/setPassword","/").permitAll() // 올바른 메소드 이름으로 수정
+                        .requestMatchers("/logout","/inquery","/percentage","/webcam/**", "/mypage").hasRole("USER") // 올바른 권한명으로 수정
                         .anyRequest().authenticated()
                 );
 
