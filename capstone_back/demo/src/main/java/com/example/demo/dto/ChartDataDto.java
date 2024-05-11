@@ -17,5 +17,5 @@ public class ChartDataDto { // 클라이언트에게 시간대별 사용량 및 
     private DayOfWeek dayOfWeek; // 요일
     private long webcamDuration; // 웹캠 실행 시간(분 단위)
     private long alarmCount; // 알람 발생 횟수
-    private String clientName; // 클라이언트 이름
+    private String Name; // 클라이언트 이름
 }
