@@ -165,7 +165,7 @@ public class ChartDataService {
 
 
         log.info("Current User Posture Percentage: {}, Rank Percentage: {}", currentUserPosturePercentage, rankPercentage); // 로그 추가
-        return new PosturePercentageDto(currentClient.getEmail(), currentUserPosturePercentage, 100-rankPercentage);
+        return new PosturePercentageDto(currentClient.getName(), currentUserPosturePercentage, 100-rankPercentage);
     }
 
 
