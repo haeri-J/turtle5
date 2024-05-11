@@ -62,7 +62,7 @@ public class ChartDataService {
         for (DayOfWeek day : DayOfWeek.values()) {
             long webcamDuration = webcamDurationByDay.getOrDefault(day, 0L);
             long alarmCount = alarmCountByDay.getOrDefault(day, 0L);
-            chartData.add(new ChartDataDto(day, webcamDuration, alarmCount));
+            chartData.add(new ChartDataDto(day, webcamDuration, alarmCount, client.getName()));
         }
 
         return chartData;
