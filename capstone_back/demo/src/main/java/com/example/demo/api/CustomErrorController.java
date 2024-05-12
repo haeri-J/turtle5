@@ -20,7 +20,7 @@ public class CustomErrorController implements ErrorController {
         body.put("timestamp", LocalDateTime.now());
         body.put("status", HttpStatus.NOT_FOUND.value());
         body.put("error", "Not Found");
-        body.put("message", "죄송합니다. 수정해야합니다.");
+        body.put("message", "서버에 오류가 일어났습니다. 다시 시도해주세요.     ");
         body.put("path", request.getRequestURI());
 
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);

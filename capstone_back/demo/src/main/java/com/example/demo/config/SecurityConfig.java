@@ -38,7 +38,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup/**", "/findID", "/findPassword", "/setPassword","/").permitAll() // 올바른 메소드 이름으로 수정
+                        .requestMatchers("/login", "/signup/**", "/findID", "/findPassword", "/setPassword","/","/image/**").permitAll() // 올바른 메소드 이름으로 수정
                         .requestMatchers("/logout","/inquery","/percentage","/webcam/**", "/mypage").hasRole("USER") // 올바른 권한명으로 수정
                         .anyRequest().authenticated()
                 );
