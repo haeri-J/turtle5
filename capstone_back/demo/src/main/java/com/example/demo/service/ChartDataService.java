@@ -71,14 +71,16 @@ public class ChartDataService {
     //기능 2.
 
     // 사용자의 자세를 올바르게 유지하지 않은 시간을 계산
-    private long calculateIncorrectPostureDuration(List<AlarmLog> todaysAlarmLogs) {
+    private double calculateIncorrectPostureDuration(List<AlarmLog> todaysAlarmLogs) {
 
-        long incorrectPostureDuration = todaysAlarmLogs.size() * 1L; // 알람 하나당 1분
+        // 알람 하나당 10초
+        double incorrectPostureDuration = todaysAlarmLogs.size() * (10 / 60.0);
 
         log.info("올바르지 않은 자세 총 시간: {} minutes", incorrectPostureDuration);
 
         return incorrectPostureDuration;
     }
+
 
 
     // 사용자의 clientId를 인자로 받아서 웹캠 총 실행 시간을 계산하고, 자세를 올바르게 유지한 시간을 계산(메소드 분리)하여 퍼센티지를 구함.
