@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,34 +31,43 @@ public class ChartDataService {
     @Autowired
     ClientRepository clientRepository;
 
-    //기능1. 차트 데이터 받아오는 함수
-    public List<ChartDataDto> getChartData(Long clientId) {
 
+    public List<ChartDataDto> getChartData(Long clientId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + clientId));
 
+        // 오늘 날짜를 기준으로 이번 주의 시작(월요일)과 끝(일요일) 날짜를 계산
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 
-        // 사용자별 WebCamLog와 AlarmLog를 조회합니다.//비어있으면 널값 반환
-        List<WebCamLog> webcamLogs = Optional.ofNullable(webCamLogRepository.findByClientId(client)).orElse(Collections.emptyList());
-        List<AlarmLog> alarmLogs = Optional.ofNullable(alarmLogRepository.findByClientId(client)).orElse(Collections.emptyList());
-        // 요일별로 웹캠 실행 시간을 집계합니다.
+        // 이번 주에 해당하는 로그만 필터링
+        List<WebCamLog> webcamLogs = Optional.ofNullable(webCamLogRepository.findByClientId(client))
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(log -> !log.getStartTime().toLocalDate().isBefore(startOfWeek) && !log.getStartTime().toLocalDate().isAfter(endOfWeek))
+                .collect(Collectors.toList());
+
+        List<AlarmLog> alarmLogs = Optional.ofNullable(alarmLogRepository.findByClientId(client))
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(log -> !log.getDateTime().toLocalDate().isBefore(startOfWeek) && !log.getDateTime().toLocalDate().isAfter(endOfWeek))
+                .collect(Collectors.toList());
+
+        // 필터링된 로그를 기반으로 요일별 웹캠 실행 시간과 알람 발생 횟수를 집계
         Map<DayOfWeek, Long> webcamDurationByDay = webcamLogs.stream()
-                //webcamLogs 리스트를 스트림으로 변환한 후, Collectors.groupingBy()를 사용하여 요일별로 로그를 그룹화합니다.
                 .collect(Collectors.groupingBy(
-                        //log.getStartTime().getDayOfWeek()를 통해 각 로그의 시작 시간으로부터 요일을 추출(getDayOfWeek())합니다
                         log -> log.getStartTime().getDayOfWeek(),
-                        //Collectors.summingLong()을 사용하여 같은 요일에 속하는 로그들의 실행 시간(시작 시간과 종료 시간의 차이)을 분 단위(ChronoUnit.MINUTES.between)로 합산합니다.
                         Collectors.summingLong(log -> ChronoUnit.MINUTES.between(log.getStartTime(), log.getEndTime()))
                 ));
 
-        // 요일별로 알람 발생 횟수를 집계합니다.
         Map<DayOfWeek, Long> alarmCountByDay = alarmLogs.stream()
                 .collect(Collectors.groupingBy(
-                        log -> log.getDateTime().getDayOfWeek(), // getTime()이 LocalDateTime을 반환한다고 가정합니다.
+                        log -> log.getDateTime().getDayOfWeek(),
                         Collectors.counting()
                 ));
 
-        // 집계된 데이터를 ChartDataDTO 리스트로 변환합니다.
+        // 집계된 데이터를 ChartDataDTO 리스트로 변환
         List<ChartDataDto> chartData = new ArrayList<>();
         for (DayOfWeek day : DayOfWeek.values()) {
             long webcamDuration = webcamDurationByDay.getOrDefault(day, 0L);
