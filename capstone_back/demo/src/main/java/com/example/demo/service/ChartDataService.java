@@ -84,7 +84,7 @@ public class ChartDataService {
     private double calculateIncorrectPostureDuration(List<AlarmLog> todaysAlarmLogs) {
 
         // 알람 하나당 10초
-        double incorrectPostureDuration = todaysAlarmLogs.size() * (10 / 60.0);
+        double incorrectPostureDuration = todaysAlarmLogs.size() * (5 / 60.0);
 
         log.info("올바르지 않은 자세 총 시간: {} minutes", incorrectPostureDuration);
 
