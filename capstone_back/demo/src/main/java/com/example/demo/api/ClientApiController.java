@@ -28,7 +28,7 @@ public class ClientApiController {
     private static final Logger logger = LoggerFactory.getLogger(ClientApiController.class);
 
     // 클라이언트 정보 입력 폼 대신 클라이언트 정보를 받아서 처리하는 API
-    @PostMapping("/signup")//1.사용자가 이 주소에 들어가면 dto형태로 회원 정보(clientid등등..)가 들어옴(@RequestBody-> post 바디형태 데이터 전달)
+    @PostMapping("/api/signup")//1.사용자가 이 주소에 들어가면 dto형태로 회원 정보(clientid등등..)가 들어옴(@RequestBody-> post 바디형태 데이터 전달)
     public ResponseEntity<Client> createClient(@RequestBody ClientForm client) {
         Client created = clientService.saveClient(client); //2.클라이언트 정보를 저장하는 로직을 서비스 계층에서 처리(서비스 내 saveClient 호출)
         // 4.디비에 잘 저장이 되어 널 값이 아니면
@@ -38,7 +38,7 @@ public class ClientApiController {
     }
 
     // 로그인 매핑
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<JwtToken> login(@RequestBody LoginRequestDto loginRequest, HttpServletResponse response) {
         String memberId = loginRequest.getEmail();
         String password = loginRequest.getPassword();
@@ -66,7 +66,7 @@ public class ClientApiController {
     }
 
     // 로그아웃 매핑
-    @PostMapping("/logout")
+    @PostMapping("/api/logout")
     public ResponseEntity<String> logout(@AuthenticationPrincipal Client client, @RequestBody JwtToken jwtToken, HttpServletResponse response) {
         // 클라이언트 서비스에서 로그아웃 처리 (예: 토큰 무효화 등)
         clientService.logout(jwtToken.getAccessToken(), client);
@@ -91,7 +91,7 @@ public class ClientApiController {
     }
 
     // Controller 계층
-    @PostMapping("/signup/id_check")
+    @PostMapping("/api/signup/id_check")
     public ResponseEntity<?> checkEmail(@RequestBody EmailDto emailDto) {
         if(clientService.checkEmailUnique(emailDto.getEmail())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("이미 존재하는 이메일이므로 다른 이메일 아이디를 사용해 주세요.");
@@ -101,7 +101,7 @@ public class ClientApiController {
 
 
     //아이디 찾기
-    @PostMapping("/findID")
+    @PostMapping("/api/findID")
     public ResponseEntity<String> findID(@RequestBody FindIDDto findIDDto){
         String created = clientService.checktoFindId(findIDDto);
         return (created != null) ?
@@ -109,7 +109,7 @@ public class ClientApiController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PostMapping("/findPassword")
+    @PostMapping("/api/findPassword")
     public ResponseEntity<String> findPassword(@RequestBody FindPasswordDto findPasswordDto){
         String created = clientService.checktoFindPassword(findPasswordDto);
         return (created != null) ?
@@ -117,7 +117,7 @@ public class ClientApiController {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
-    @PostMapping("/setPassword")
+    @PostMapping("/api/setPassword")
     public ResponseEntity<?> setPassword(@RequestBody SetPassword setPassword){
         PW created = clientService.setPassword(setPassword);
         return (created != null) ?
@@ -126,7 +126,7 @@ public class ClientApiController {
 
     }
 
-    @GetMapping("/mypage")
+    @GetMapping("/api/mypage")
     public ResponseEntity<UserInfoDto> getforMypage(){
         Long clientId = authenticationService.getCurrentUserId();
         UserInfoDto created = clientService.getforMypage(clientId);

@@ -41,15 +41,15 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup/**", "/findID", "/findPassword", "/setPassword","/","/image/**").permitAll() // 올바른 메소드 이름으로 수정
-                        .requestMatchers("/logout","/inquery","/percentage","/webcam/**", "/mypage").hasRole("USER") // 올바른 권한명으로 수정
+                        .requestMatchers("/api/login", "/api/signup/**", "/api/findID", "/api/findPassword", "/api/setPassword","/","/api/image/**").permitAll() // 올바른 메소드 이름으로 수정
+                        .requestMatchers("/api/logout","/api/inquery","/api/percentage","/api/webcam/**", "/api/mypage").hasRole("USER") // 올바른 권한명으로 수정
                         .anyRequest().authenticated()
                 );
 
         http
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 추가
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // 로그아웃 URL 지정
+                        .logoutUrl("/api/logout") // 로그아웃 URL 지정
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK); // 로그아웃 성공 시 HTTP 상태 코드 200 반환
                             // 필요에 따라 JSON 응답을 설정할 수 있습니다.
