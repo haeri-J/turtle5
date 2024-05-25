@@ -42,7 +42,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/login", "/api/signup/**", "/api/findID", "/api/findPassword", "/api/setPassword","/","/api/image/**").permitAll() // 올바른 메소드 이름으로 수정
-                        .requestMatchers("/api/logout","/api/inquery","/api/percentage","/api/webcam/**", "/api/mypage").hasRole("USER") // 올바른 권한명으로 수정
+                        .requestMatchers("/api/logout","/api/inquiry","/api/percentage","/api/webcam/**", "/api/mypage").hasRole("USER") // 올바른 권한명으로 수정
                         .anyRequest().authenticated()
                 );
 
