@@ -120,7 +120,7 @@ public class ClientApiController {
     @PostMapping("/setPassword")
     public ResponseEntity<?> setPassword(@RequestBody SetPassword setPassword){
         PW created = clientService.setPassword(setPassword);
-        return (created != null) ?
+        return (created != null) ?  
                 ResponseEntity.status(HttpStatus.OK).build() :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
