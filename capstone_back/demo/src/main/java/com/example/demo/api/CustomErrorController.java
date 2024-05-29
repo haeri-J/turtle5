@@ -14,7 +14,7 @@ import java.util.Map;
 @RestController
 public class CustomErrorController implements ErrorController {
 
-    @RequestMapping("/error")
+    @RequestMapping("/api/error")
     public ResponseEntity<Map<String, Object>> handleError(HttpServletRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());

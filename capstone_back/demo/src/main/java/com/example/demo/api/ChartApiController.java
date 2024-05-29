@@ -24,7 +24,7 @@ public class ChartApiController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @GetMapping("/inquiry")
+    @GetMapping("/api/inquiry")
     public ResponseEntity<List<ChartDataDto>> getChartData() {
 
         Long clientId = authenticationService.getCurrentUserId();
@@ -35,7 +35,7 @@ public class ChartApiController {
     }
 
 
-    @GetMapping("/percentage")
+    @GetMapping("/api/percentage")
     public ResponseEntity<PosturePercentageDto> getPercentage() {
 
         Long clientId = authenticationService.getCurrentUserId();

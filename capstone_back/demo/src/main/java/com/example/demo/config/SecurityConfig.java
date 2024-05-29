@@ -14,6 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+                .cors(withDefaults())
                 .httpBasic(httpBasic -> httpBasic.disable()) // 기본 인증 비활성화
                 .csrf(csrf -> csrf.disable()) // CSRF 보호 기능 비활성화
                 .sessionManagement(session -> session
@@ -38,15 +41,15 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/signup/**", "/findID", "/findPassword", "/setPassword","/","/image/**").permitAll() // 올바른 메소드 이름으로 수정
-                        .requestMatchers("/logout","/inquery","/percentage","/webcam/**", "/mypage").hasRole("USER") // 올바른 권한명으로 수정
+                        .requestMatchers("/api/login", "/api/signup/**", "/api/findID", "/api/findPassword", "/api/setPassword","/","/api/image/**").permitAll() // 올바른 메소드 이름으로 수정
+                        .requestMatchers("/api/logout","/api/inquiry","/api/percentage","/api/webcam/**", "/api/mypage").hasRole("USER") // 올바른 권한명으로 수정
                         .anyRequest().authenticated()
                 );
 
         http
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class) // JWT 인증 필터 추가
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // 로그아웃 URL 지정
+                        .logoutUrl("/api/logout") // 로그아웃 URL 지정
                         .logoutSuccessHandler((request, response, authentication) -> {
                             response.setStatus(HttpServletResponse.SC_OK); // 로그아웃 성공 시 HTTP 상태 코드 200 반환
                             // 필요에 따라 JSON 응답을 설정할 수 있습니다.

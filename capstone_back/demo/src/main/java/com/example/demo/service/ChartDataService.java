@@ -84,7 +84,7 @@ public class ChartDataService {
     private double calculateIncorrectPostureDuration(List<AlarmLog> todaysAlarmLogs) {
 
         // 알람 하나당 10초
-        double incorrectPostureDuration = todaysAlarmLogs.size() * (10 / 60.0);
+        double incorrectPostureDuration = todaysAlarmLogs.size() * (5 / 60.0);
 
         log.info("올바르지 않은 자세 총 시간: {} minutes", incorrectPostureDuration);
 
@@ -170,9 +170,11 @@ public class ChartDataService {
 
         log.info("higerCount 총 사용자 중에 몇등인지 {} ",higherCount);
 
+        int rankPercentage = 0;
         // 상위 퍼센트 계산// 반환 값이 90이면, 현재 사용자의 자세 유지 비율이 모든 사용자 중 상위 10%에 해당함을 의미
-        int rankPercentage = (int) ((1 - ((double) higherCount / allUsersPosturePercentages.size())) * 100);
-
+        if(currentUserPosturePercentage > 0) {
+            rankPercentage = (int) ((1 - ((double) higherCount / allUsersPosturePercentages.size())) * 100);
+        }
         Client currentClient = clientRepository.findById(currentClientId).orElseThrow(() -> new IllegalArgumentException("해당하는 Client가 없습니다. ID: " + currentClientId));
 
 
