@@ -45,20 +45,6 @@ public class ClientApiController {
         JwtToken jwtToken = clientService.login(memberId, password);
 
         if (jwtToken != null) {
-//            // Access Token 쿠키 추가
-//            Cookie accessTokenCookie = new Cookie("accessToken", jwtToken.getAccessToken());
-//            accessTokenCookie.setHttpOnly(true); // JS를 통한 접근 방지
-//            accessTokenCookie.setSecure(true); // HTTPS를 통해서만 쿠키 전송
-//            accessTokenCookie.setPath("/");
-//            response.addCookie(accessTokenCookie);
-//
-//            // Refresh Token 쿠키 추가 (필요시)
-//            Cookie refreshTokenCookie = new Cookie("refreshToken", jwtToken.getRefreshToken());
-//            refreshTokenCookie.setHttpOnly(true);
-//            refreshTokenCookie.setSecure(true);
-//            refreshTokenCookie.setPath("/");
-//            response.addCookie(refreshTokenCookie);
-
             return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -70,23 +56,6 @@ public class ClientApiController {
     public ResponseEntity<String> logout(@AuthenticationPrincipal Client client, @RequestBody JwtToken jwtToken, HttpServletResponse response) {
         // 클라이언트 서비스에서 로그아웃 처리 (예: 토큰 무효화 등)
         clientService.logout(jwtToken.getAccessToken(), client);
-
-        // Access Token 쿠키 만료
-//        Cookie accessTokenCookie = new Cookie("accessToken", null);
-//        accessTokenCookie.setMaxAge(0); // 쿠키 만료
-//        accessTokenCookie.setHttpOnly(true);
-//        accessTokenCookie.setSecure(true);
-//        accessTokenCookie.setPath("/");
-//        response.addCookie(accessTokenCookie);
-//
-//        // Refresh Token 쿠키 만료 (필요시)
-//        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-//        refreshTokenCookie.setMaxAge(0); // 쿠키 만료
-//        refreshTokenCookie.setHttpOnly(true);
-//        refreshTokenCookie.setSecure(true);
-//        refreshTokenCookie.setPath("/");
-//        response.addCookie(refreshTokenCookie);
-
         return ResponseEntity.ok("로그아웃 되었습니다.");
     }
 
@@ -134,5 +103,12 @@ public class ClientApiController {
                 ResponseEntity.status(HttpStatus.OK).body(created) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
+    }
+    @GetMapping("/api/Membercount")
+    public  ResponseEntity<MemberCount> CountMember(){
+        MemberCount created = clientService.countMember();
+        return (created != null)?
+                ResponseEntity.status(HttpStatus.OK).body(created) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 }

@@ -24,6 +24,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -158,6 +159,32 @@ public class ClientService {
         double totalAlarmCounut = (long) todaysAlarmLogs.size();
 
         return new UserInfoDto(userInfo.getName(),userInfo.getEmail(),userInfo.getPhoneNo(),(int)totalAlarmCounut, (int)totalWebCamDuration);
+    }
+
+    public MemberCount countMember() {
+
+
+        List<Long> allClientIds = clientRepository.findAll().stream()
+                    .map(Client::getClientId)
+                    .toList();
+
+        LocalDate todayDate = LocalDate.now();
+        LocalDateTime startOfDay = todayDate.atStartOfDay();
+        LocalDateTime endOfDay = todayDate.atTime(LocalTime.MAX);
+
+        // 오늘 날짜의 AlarmLog 조회
+        List<AlarmLog> todaysAlarmLogs = alarmLogRepository.findByDateTimeBetween(startOfDay, endOfDay);
+
+        // 오늘 날짜의 AlarmLog에 연결된 고유한 Client의 수를 계산
+        long count = todaysAlarmLogs.stream()
+                .map(AlarmLog::getClientId)
+                .distinct()
+                .count();
+
+
+        return new MemberCount(allClientIds.size(),(int) count);
+
+
     }
 }
 
